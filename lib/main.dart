@@ -38,19 +38,18 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: const Text('climb.it'),
         flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.pink, Colors.orange])
-          )
-        ),
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.pink, Colors.orange]))),
       ),
       body: Center(child: Text('Tab $_selectedIndex')),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Routes'),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.account_circle), label: 'Profile'),
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
         ],
         currentIndex: _selectedIndex,

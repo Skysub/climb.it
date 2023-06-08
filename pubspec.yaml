@@ -1,5 +1,5 @@
-name: treugers_projekt_flutter
-description: A new Flutter project.
+name: climb_it 
+description: A bouldering companion app to view available routes and manage completed routes in local bouldering gym.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev

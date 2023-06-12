@@ -1,3 +1,4 @@
+import 'package:climb_it/gyms.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -57,7 +58,12 @@ class _HomeState extends State<Home> {
                     end: Alignment.bottomRight,
                     colors: [Colors.pink, Colors.orange]))),
       ),
-      body: Center(child: Text('Tab $_selectedIndex')),
+      body: Center(
+          child: [
+        const GymPage(),
+        const Text('Profile Page'),
+        const Text('Settings Page')
+      ][_selectedIndex]),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Routes'),

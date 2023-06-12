@@ -24,8 +24,10 @@ class GymPage extends StatelessWidget {
             return ListView.builder(
                 itemCount: gyms.length,
                 shrinkWrap: true,
-                itemBuilder: (context, index) =>
-                    Center(child: Text(gyms[index].name)));
+                itemBuilder: (context, index) => Container(
+                      color: Color.lerp(Colors.pink, Colors.orange, index/gyms.length),
+                      child: Center(child: Text(gyms[index].name)),
+                    ));
           } else {
             return const Center(child: CircularProgressIndicator());
           }

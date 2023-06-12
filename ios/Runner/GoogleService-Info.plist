@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>808817238237-adm1vuhfoqeuj8rl81gp3n0bqpip34po.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.808817238237-adm1vuhfoqeuj8rl81gp3n0bqpip34po</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAZpqPuw5oTb9eiuXt2_kZ90VZy2YDcU2g</string>
+	<key>GCM_SENDER_ID</key>
+	<string>808817238237</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.treugersProjektFlutter</string>
+	<key>PROJECT_ID</key>
+	<string>klatre-app1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>klatre-app1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:808817238237:ios:e6132e7149e34187217b34</string>
+	<key>DATABASE_URL</key>
+	<string>https://klatre-app1-default-rtdb.europe-west1.firebasedatabase.app</string>
+</dict>
+</plist>

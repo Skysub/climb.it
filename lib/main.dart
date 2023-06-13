@@ -1,8 +1,9 @@
-import 'package:climb_it/gym_nav.dart';
+import 'package:climb_it/profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:climb_it/profile.dart';
+
 import 'firebase_options.dart';
+import 'gyms/gym_nav.dart';
 
 void main() async {
   // Initialize widgets before initializing Firebase

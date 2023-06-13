@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:climb_it/gyms.dart';
+
+import 'gym.dart';
 
 class ClimbingRoute {
   final String name;

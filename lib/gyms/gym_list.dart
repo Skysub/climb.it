@@ -1,26 +1,18 @@
-import 'package:climb_it/gym_overview.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
-class Gym {
-  final String key;
-  final String name;
+import 'gym.dart';
+import 'gym_item.dart';
+import 'gym_overview.dart';
 
-  Gym({required this.key, required this.name});
-
-  static Gym fromJSON(Map<dynamic, dynamic> json, String key) {
-    return Gym(key: key, name: json['name']);
-  }
-}
-
-class GymPage extends StatefulWidget {
-  const GymPage({super.key});
+class GymList extends StatefulWidget {
+  const GymList({super.key});
 
   @override
-  State<GymPage> createState() => GymPageState();
+  State<GymList> createState() => GymListState();
 }
 
-class GymPageState extends State<GymPage> {
+class GymListState extends State<GymList> {
   late Future<List<Gym>> gymFuture;
 
   @override
@@ -77,28 +69,5 @@ class GymPageState extends State<GymPage> {
     return data.snapshot.children
         .map((e) => Gym.fromJSON(e.value as Map, e.key ?? ''))
         .toList();
-  }
-}
-
-class GymItem extends StatelessWidget {
-  const GymItem({super.key, required this.gym, required this.color});
-
-  final Gym gym;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: color),
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 20),
-        child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(gym.name, style: const TextStyle(fontSize: 24))),
-      ),
-    );
   }
 }

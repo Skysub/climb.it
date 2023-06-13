@@ -1,5 +1,6 @@
-import 'package:climb_it/gyms.dart';
 import 'package:flutter/material.dart';
+
+import 'gym_list.dart';
 
 class GymNav extends StatelessWidget {
   const GymNav({super.key, required this.navigatorKey});
@@ -10,7 +11,8 @@ class GymNav extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (navigatorKey.currentState != null && navigatorKey.currentState!.canPop()) {
+        if (navigatorKey.currentState != null &&
+            navigatorKey.currentState!.canPop()) {
           navigatorKey.currentState!.pop();
         }
         return false;
@@ -19,14 +21,9 @@ class GymNav extends StatelessWidget {
         key: navigatorKey,
         initialRoute: '/',
         onGenerateInitialRoutes: (navigatorState, initialRoute) {
-          return [
-            MaterialPageRoute(
-              builder: (context) => const GymPage()
-            )
-          ];
+          return [MaterialPageRoute(builder: (context) => const GymList())];
         },
       ),
     );
   }
-
 }

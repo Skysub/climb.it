@@ -42,13 +42,21 @@ class GymPageState extends State<GymPage> {
           builder: (context, gymSnapshot) {
             if (gymSnapshot.hasData) {
               List<Gym> gyms = gymSnapshot.data!;
-              return ListView.builder(
-                  itemCount: gyms.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => Container(
-                        color: Color.lerp(Colors.pink, Colors.orange, index/gyms.length),
-                        child: Center(child: Text(gyms[index].name)),
-                      ));
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: ListView.separated(
+                    itemCount: gyms.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 15),
+                    itemBuilder: (context, index) => GestureDetector(
+                          onTap: () => {},
+                          child: GymItem(
+                            gym: gyms[index],
+                            color: Color.lerp(Colors.pink, Colors.orange,
+                                index / gyms.length)!,
+                          ),
+                        )),
+              );
             } else {
               return const Center(child: CircularProgressIndicator());
             }
@@ -63,5 +71,28 @@ class GymPageState extends State<GymPage> {
     return data.snapshot.children
         .map((e) => Gym.fromJSON(e.value as Map))
         .toList();
+  }
+}
+
+class GymItem extends StatelessWidget {
+  const GymItem({super.key, required this.gym, required this.color});
+
+  final Gym gym;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          color: color),
+      height: 100,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20),
+        child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(gym.name, style: const TextStyle(fontSize: 24))),
+      ),
+    );
   }
 }

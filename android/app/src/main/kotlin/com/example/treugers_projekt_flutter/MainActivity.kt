@@ -1,4 +1,4 @@
-package com.example.treugers_projekt_flutter
+package com.climb.it
 
 import io.flutter.embedding.android.FlutterActivity
 

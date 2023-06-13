@@ -1,3 +1,4 @@
+import 'package:climb_it/main_app_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +60,8 @@ class _HomeState extends State<Home> {
     pages = [
       GymNav(navigatorKey: gymNavigatorKey),
       ProfilePage(),
-      const Text('Settings Page')
+      const Scaffold(
+          appBar: MainAppBar(barTitle: 'Settings'), body: Text('Settings Page'))
     ];
   }
 

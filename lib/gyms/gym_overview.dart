@@ -73,8 +73,6 @@ class GymOverviewState extends State<GymOverview> {
   }
 
   Future<List<ClimbingRoute>> getData() async {
-    //TODO Remove delay. Used to visualize loading
-    await Future.delayed(const Duration(milliseconds: 500));
     var data = await FirebaseDatabase.instance
         .ref()
         .child('routes')

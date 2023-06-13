@@ -1,3 +1,4 @@
+import 'package:climb_it/gym_overview.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -49,7 +50,13 @@ class GymPageState extends State<GymPage> {
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 15),
                     itemBuilder: (context, index) => GestureDetector(
-                          onTap: () => {},
+                          onTap: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        GymOverview(gym: gyms[index])))
+                          },
                           child: GymItem(
                             gym: gyms[index],
                             color: Color.lerp(Colors.pink, Colors.orange,

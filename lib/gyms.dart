@@ -11,27 +11,49 @@ class Gym {
   }
 }
 
-class GymPage extends StatelessWidget {
+class GymPage extends StatefulWidget {
   const GymPage({super.key});
 
   @override
+  State<GymPage> createState() => GymPageState();
+}
+
+class GymPageState extends State<GymPage> {
+  late Future<List<Gym>> gymFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    gymFuture = getData();
+  }
+
+  Future<void> updateGymList() async {
+    setState(() {
+      gymFuture = getData();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: getData(),
-        builder: (context, gymSnapshot) {
-          if (gymSnapshot.hasData) {
-            List<Gym> gyms = gymSnapshot.data!;
-            return ListView.builder(
-                itemCount: gyms.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) => Container(
-                      color: Color.lerp(Colors.pink, Colors.orange, index/gyms.length),
-                      child: Center(child: Text(gyms[index].name)),
-                    ));
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        });
+    return RefreshIndicator(
+      onRefresh: updateGymList,
+      child: FutureBuilder(
+          future: gymFuture,
+          builder: (context, gymSnapshot) {
+            if (gymSnapshot.hasData) {
+              List<Gym> gyms = gymSnapshot.data!;
+              return ListView.builder(
+                  itemCount: gyms.length,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => Container(
+                        color: Color.lerp(Colors.pink, Colors.orange, index/gyms.length),
+                        child: Center(child: Text(gyms[index].name)),
+                      ));
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          }),
+    );
   }
 
   Future<List<Gym>> getData() async {

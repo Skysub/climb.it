@@ -1,7 +1,7 @@
 import 'package:climb_it/gyms.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'package:climb_it/profile.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
 
   final List<Widget> pages = [
     const GymPage(key: PageStorageKey('gyms')),
-    const Text('Profile Page'),
+    ProfilePage(),
     const Text('Settings Page')
   ];
 

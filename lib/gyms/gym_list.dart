@@ -50,6 +50,8 @@ class GymListState extends State<GymList> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
+                                      settings: const RouteSettings(
+                                          name: "/GymOverviewPage"),
                                       builder: (context) =>
                                           GymOverview(gym: gyms[index])))
                             },

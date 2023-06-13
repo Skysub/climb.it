@@ -1,3 +1,4 @@
+import 'package:climb_it/gyms/route_item.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -51,7 +52,7 @@ class GymOverviewState extends State<GymOverview> {
                       itemBuilder: (context, index) => GestureDetector(
                             onTap: () => {},
                             child: RouteItem(
-                              route: routes[index],
+                              climbingRoute: routes[index],
                               color: Color.lerp(Colors.pink, Colors.orange,
                                   index / routes.length)!,
                             ),
@@ -82,28 +83,5 @@ class GymOverviewState extends State<GymOverview> {
     return data.snapshot.children
         .map((e) => ClimbingRoute.fromJSON(e.value as Map))
         .toList();
-  }
-}
-
-class RouteItem extends StatelessWidget {
-  const RouteItem({super.key, required this.route, required this.color});
-
-  final ClimbingRoute route;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: color),
-      height: 100,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 20),
-        child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(route.name, style: const TextStyle(fontSize: 24))),
-      ),
-    );
   }
 }

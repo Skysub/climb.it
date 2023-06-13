@@ -1,9 +1,10 @@
-import 'package:climb_it/profile.dart';
+import 'package:climb_it/main_app_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
 import 'gyms/gym_nav.dart';
+import 'profile_page.dart';
 
 void main() async {
   // Initialize widgets before initializing Firebase
@@ -59,7 +60,8 @@ class _HomeState extends State<Home> {
     pages = [
       GymNav(navigatorKey: gymNavigatorKey),
       ProfilePage(),
-      const Text('Settings Page')
+      const Scaffold(
+          appBar: MainAppBar(barTitle: 'Settings'), body: Text('Settings Page'))
     ];
   }
 

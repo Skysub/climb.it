@@ -1,7 +1,7 @@
 import 'package:climb_it/gyms.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
+import 'package:climb_it/profile.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -25,7 +25,12 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: const Home(),
+      //home: const Home(),
+
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Home(),
+      },
     );
   }
 }
@@ -39,6 +44,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
+
+  final List<Widget> pages = [
+    const GymPage(key: PageStorageKey('gyms')),
+    ProfilePage(),
+    const Text('Settings Page')
+  ];
 
   _selectTab(int index) {
     setState(() {
@@ -58,12 +69,7 @@ class _HomeState extends State<Home> {
                     end: Alignment.bottomRight,
                     colors: [Colors.pink, Colors.orange]))),
       ),
-      body: Center(
-          child: [
-        const GymPage(),
-        const Text('Profile Page'),
-        const Text('Settings Page')
-      ][_selectedIndex]),
+      body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Routes'),

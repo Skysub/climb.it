@@ -3,12 +3,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class Gym {
+  final String key;
   final String name;
 
-  Gym({required this.name});
+  Gym({required this.key, required this.name});
 
-  static Gym fromJSON(Map<dynamic, dynamic> json) {
-    return Gym(name: json['name']);
+  static Gym fromJSON(Map<dynamic, dynamic> json, String key) {
+    return Gym(key: key, name: json['name']);
   }
 }
 
@@ -25,12 +26,12 @@ class GymPageState extends State<GymPage> {
   @override
   void initState() {
     super.initState();
-    gymFuture = getData();
+    gymFuture = getGymList();
   }
 
   Future<void> updateGymList() async {
     setState(() {
-      gymFuture = getData();
+      gymFuture = getGymList();
     });
   }
 
@@ -71,12 +72,10 @@ class GymPageState extends State<GymPage> {
     );
   }
 
-  Future<List<Gym>> getData() async {
-    //TODO Remove delay. Used to visualize loading
-    await Future.delayed(const Duration(milliseconds: 500));
-    var data = await FirebaseDatabase.instance.ref().child('locations').once();
+  Future<List<Gym>> getGymList() async {
+    var data = await FirebaseDatabase.instance.ref().child('gyms').once();
     return data.snapshot.children
-        .map((e) => Gym.fromJSON(e.value as Map))
+        .map((e) => Gym.fromJSON(e.value as Map, e.key ?? ''))
         .toList();
   }
 }

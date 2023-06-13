@@ -40,6 +40,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
 
+  final List<Widget> pages = [
+    const GymPage(key: PageStorageKey('gyms')),
+    const Text('Profile Page'),
+    const Text('Settings Page')
+  ];
+
   _selectTab(int index) {
     setState(() {
       _selectedIndex = index;
@@ -58,12 +64,7 @@ class _HomeState extends State<Home> {
                     end: Alignment.bottomRight,
                     colors: [Colors.pink, Colors.orange]))),
       ),
-      body: Center(
-          child: [
-        const GymPage(),
-        const Text('Profile Page'),
-        const Text('Settings Page')
-      ][_selectedIndex]),
+      body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Routes'),

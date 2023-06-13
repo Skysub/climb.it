@@ -1,8 +1,9 @@
-import 'package:climb_it/gym_nav.dart';
+import 'package:climb_it/profile.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:climb_it/profile.dart';
+
 import 'firebase_options.dart';
+import 'gyms/gym_nav.dart';
 
 void main() async {
   // Initialize widgets before initializing Firebase
@@ -48,6 +49,10 @@ class _HomeState extends State<Home> {
 
   late List<Widget> pages;
 
+  List<Color> bottomColors = [0.0, 0.5, 1.0]
+      .map((e) => Color.lerp(Colors.pink, Colors.orange, e)!)
+      .toList();
+
   @override
   void initState() {
     super.initState();
@@ -71,15 +76,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('climb.it'),
-        flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Colors.pink, Colors.orange]))),
-      ),
       body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -89,7 +85,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.pink[400],
+        selectedItemColor: bottomColors[_selectedIndex],
         onTap: _selectTab,
       ),
     );

@@ -1,6 +1,8 @@
+import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:climb_it/gyms.dart';
+
+import 'gym.dart';
 
 class ClimbingRoute {
   final String name;
@@ -31,32 +33,35 @@ class GymOverviewState extends State<GymOverview> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: updateRouteList,
-      child: FutureBuilder(
-          future: routeFuture,
-          builder: (context, routeSnapshot) {
-            if (routeSnapshot.hasData) {
-              List<ClimbingRoute> routes = routeSnapshot.data!;
-              return Padding(
-                padding: const EdgeInsets.all(10),
-                child: ListView.separated(
-                    itemCount: routes.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 15),
-                    itemBuilder: (context, index) => GestureDetector(
-                          onTap: () => {},
-                          child: RouteItem(
-                            route: routes[index],
-                            color: Color.lerp(Colors.pink, Colors.orange,
-                                index / routes.length)!,
-                          ),
-                        )),
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          }),
+    return Scaffold(
+      appBar: MainAppBar(barTitle: widget.gym.name),
+      body: RefreshIndicator(
+        onRefresh: updateRouteList,
+        child: FutureBuilder(
+            future: routeFuture,
+            builder: (context, routeSnapshot) {
+              if (routeSnapshot.hasData) {
+                List<ClimbingRoute> routes = routeSnapshot.data!;
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: ListView.separated(
+                      itemCount: routes.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 15),
+                      itemBuilder: (context, index) => GestureDetector(
+                            onTap: () => {},
+                            child: RouteItem(
+                              route: routes[index],
+                              color: Color.lerp(Colors.pink, Colors.orange,
+                                  index / routes.length)!,
+                            ),
+                          )),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            }),
+      ),
     );
   }
 

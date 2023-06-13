@@ -1,4 +1,4 @@
-import 'package:climb_it/gyms.dart';
+import 'package:climb_it/gym_nav.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:climb_it/profile.dart';
@@ -44,12 +44,19 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
+  GlobalKey<NavigatorState> gymNavigatorKey = GlobalKey();
 
-  final List<Widget> pages = [
-    const GymPage(key: PageStorageKey('gyms')),
-    ProfilePage(),
-    const Text('Settings Page')
-  ];
+  late List<Widget> pages;
+
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      GymNav(navigatorKey: gymNavigatorKey),
+      ProfilePage(),
+      const Text('Settings Page')
+    ];
+  }
 
   _selectTab(int index) {
     setState(() {

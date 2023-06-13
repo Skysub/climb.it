@@ -1,3 +1,4 @@
+import 'package:climb_it/main_app_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -29,38 +30,41 @@ class GymListState extends State<GymList> {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: updateGymList,
-      child: FutureBuilder(
-          future: gymFuture,
-          builder: (context, gymSnapshot) {
-            if (gymSnapshot.hasData) {
-              List<Gym> gyms = gymSnapshot.data!;
-              return Padding(
-                padding: const EdgeInsets.all(10),
-                child: ListView.separated(
-                    itemCount: gyms.length,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 15),
-                    itemBuilder: (context, index) => GestureDetector(
-                          onTap: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        GymOverview(gym: gyms[index])))
-                          },
-                          child: GymItem(
-                            gym: gyms[index],
-                            color: Color.lerp(Colors.pink, Colors.orange,
-                                index / gyms.length)!,
-                          ),
-                        )),
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          }),
+    return Scaffold(
+      appBar: const MainAppBar(barTitle: 'Gyms'),
+      body: RefreshIndicator(
+        onRefresh: updateGymList,
+        child: FutureBuilder(
+            future: gymFuture,
+            builder: (context, gymSnapshot) {
+              if (gymSnapshot.hasData) {
+                List<Gym> gyms = gymSnapshot.data!;
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: ListView.separated(
+                      itemCount: gyms.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 15),
+                      itemBuilder: (context, index) => GestureDetector(
+                            onTap: () => {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          GymOverview(gym: gyms[index])))
+                            },
+                            child: GymItem(
+                              gym: gyms[index],
+                              color: Color.lerp(Colors.pink, Colors.orange,
+                                  index / gyms.length)!,
+                            ),
+                          )),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            }),
+      ),
     );
   }
 

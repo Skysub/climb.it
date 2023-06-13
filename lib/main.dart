@@ -72,15 +72,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('climb.it'),
-        flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Colors.pink, Colors.orange]))),
-      ),
       body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         items: const [

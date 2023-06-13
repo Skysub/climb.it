@@ -67,7 +67,8 @@ class _HomeState extends State<Home> {
     setState(() {
       //Jumpes to the gym list page if the routes button is pressed while already on the routes screen
       if (_selectedIndex == index && index == 0) {
-        gymNavigatorKey.currentState?.popUntil(ModalRoute.withName("/GymPage"));
+        gymNavigatorKey.currentState
+            ?.popUntil(ModalRoute.withName("/GymListPage"));
       }
       _selectedIndex = index;
     });

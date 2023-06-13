@@ -35,35 +35,46 @@ class GymOverviewState extends State<GymOverview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(barTitle: widget.gym.name),
-      body: RefreshIndicator(
-        onRefresh: updateRouteList,
-        child: FutureBuilder(
-            future: routeFuture,
-            builder: (context, routeSnapshot) {
-              if (routeSnapshot.hasData) {
-                List<ClimbingRoute> routes = routeSnapshot.data!;
-                return Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: ListView.separated(
-                      itemCount: routes.length,
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 15),
-                      itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => {},
-                            child: RouteItem(
-                              climbingRoute: routes[index],
-                              color: Color.lerp(Colors.pink, Colors.orange,
-                                  index / routes.length)!,
-                            ),
-                          )),
-                );
-              } else {
-                return const Center(child: CircularProgressIndicator());
-              }
-            }),
-      ),
-    );
+        appBar: MainAppBar(barTitle: widget.gym.name),
+        body: Column(
+          children: [
+            Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.only(left: 10, top: 10),
+                child: const Text("Ruter:", style: TextStyle(fontSize: 30))),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: updateRouteList,
+                child: FutureBuilder(
+                    future: routeFuture,
+                    builder: (context, routeSnapshot) {
+                      if (routeSnapshot.hasData) {
+                        List<ClimbingRoute> routes = routeSnapshot.data!;
+                        return Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: ListView.separated(
+                              itemCount: routes.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 15),
+                              itemBuilder: (context, index) => GestureDetector(
+                                    onTap: () => {},
+                                    child: RouteItem(
+                                      climbingRoute: routes[index],
+                                      color: Color.lerp(
+                                          Colors.pink,
+                                          Colors.orange,
+                                          index / routes.length)!,
+                                    ),
+                                  )),
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    }),
+              ),
+            )
+          ],
+        ));
   }
 
   Future<void> updateRouteList() async {
@@ -74,7 +85,7 @@ class GymOverviewState extends State<GymOverview> {
 
   Future<List<ClimbingRoute>> getData() async {
     //TODO Remove delay. Used to visualize loading
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 300));
     var data = await FirebaseDatabase.instance
         .ref()
         .child('routes')

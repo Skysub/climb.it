@@ -14,11 +14,10 @@ class GymNav extends StatelessWidget {
       onGenerateInitialRoutes: (navigatorState, initialRoute) {
         return [
           MaterialPageRoute(
-            builder: (context) => const GymPage()
-          )
+              settings: const RouteSettings(name: "/GymPage"),
+              builder: (context) => const GymPage())
         ];
       },
     );
   }
-
 }

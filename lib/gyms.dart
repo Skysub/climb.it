@@ -25,12 +25,12 @@ class GymPageState extends State<GymPage> {
   @override
   void initState() {
     super.initState();
-    gymFuture = getData();
+    gymFuture = getGymList();
   }
 
   Future<void> updateGymList() async {
     setState(() {
-      gymFuture = getData();
+      gymFuture = getGymList();
     });
   }
 
@@ -65,10 +65,8 @@ class GymPageState extends State<GymPage> {
     );
   }
 
-  Future<List<Gym>> getData() async {
-    //TODO Remove delay. Used to visualize loading
-    await Future.delayed(const Duration(milliseconds: 500));
-    var data = await FirebaseDatabase.instance.ref().child('locations').once();
+  Future<List<Gym>> getGymList() async {
+    var data = await FirebaseDatabase.instance.ref().child('gyms').once();
     return data.snapshot.children
         .map((e) => Gym.fromJSON(e.value as Map, e.key ?? ''))
         .toList();

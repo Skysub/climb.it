@@ -71,7 +71,8 @@ class GymOverviewState extends State<GymOverview> {
     await Future.delayed(const Duration(milliseconds: 500));
     var data = await FirebaseDatabase.instance
         .ref()
-        .child('routes/${widget.gym.name}')
+        .child('routes')
+        .child(widget.gym.key)
         .once();
     return data.snapshot.children
         .map((e) => ClimbingRoute.fromJSON(e.value as Map))

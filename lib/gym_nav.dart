@@ -8,16 +8,24 @@ class GymNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      initialRoute: '/',
-      onGenerateInitialRoutes: (navigatorState, initialRoute) {
-        return [
-          MaterialPageRoute(
-            builder: (context) => const GymPage()
-          )
-        ];
+    return WillPopScope(
+      onWillPop: () async {
+        if (navigatorKey.currentState != null && navigatorKey.currentState!.canPop()) {
+          navigatorKey.currentState!.pop();
+        }
+        return false;
       },
+      child: Navigator(
+        key: navigatorKey,
+        initialRoute: '/',
+        onGenerateInitialRoutes: (navigatorState, initialRoute) {
+          return [
+            MaterialPageRoute(
+              builder: (context) => const GymPage()
+            )
+          ];
+        },
+      ),
     );
   }
 

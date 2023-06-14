@@ -63,56 +63,46 @@ class GymOverviewState extends State<GymOverview> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: MainAppBar(barTitle: widget.gym.name),
-        body: Column(
-          children: [
-            Container(
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.only(left: 10, top: 10),
-                child: const Text("Ruter:", style: TextStyle(fontSize: 30))),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: updateRouteList,
-                child: FutureBuilder(
-                    future: routeFuture,
-                    builder: (context, routeSnapshot) {
-                      if (routeSnapshot.hasData) {
-                        if (routeSnapshot.data!.isEmpty) {
-                          return const Center(
-                              child: Text('This gym currently has no routes.'));
-                        } else {
-                          List<ClimbingRoute> routes = routeSnapshot.data!;
-                          return Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: ListView.separated(
-                                itemCount: routes.length,
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 15),
-                                itemBuilder: (context, index) =>
-                                    GestureDetector(
-                                      onTap: () => {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => RoutePage(
-                                                    route: routes[index])))
-                                      },
-                                      child: RouteItem(
-                                        climbingRoute: routes[index],
-                                        color: Color.lerp(
-                                            Colors.pink,
-                                            Colors.orange,
-                                            index / routes.length)!,
-                                      ),
-                                    )),
-                          );
-                        }
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    }),
-              ),
-            )
-          ],
+        body: RefreshIndicator(
+          onRefresh: updateRouteList,
+          child: FutureBuilder(
+              future: routeFuture,
+              builder: (context, routeSnapshot) {
+                if (routeSnapshot.hasData) {
+                  if (routeSnapshot.data!.isEmpty) {
+                    return const Center(
+                        child: Text('This gym currently has no routes.'));
+                  } else {
+                    List<ClimbingRoute> routes = routeSnapshot.data!;
+                    return Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: ListView.separated(
+                          itemCount: routes.length,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 15),
+                          itemBuilder: (context, index) =>
+                              GestureDetector(
+                                onTap: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RoutePage(
+                                              route: routes[index])))
+                                },
+                                child: RouteItem(
+                                  climbingRoute: routes[index],
+                                  color: Color.lerp(
+                                      Colors.pink,
+                                      Colors.orange,
+                                      index / routes.length)!,
+                                ),
+                              )),
+                    );
+                  }
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              }),
         ));
   }
 

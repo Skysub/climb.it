@@ -2,14 +2,17 @@ import 'package:climb_it/main_app_bar.dart';
 import 'package:climb_it/route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
 import 'firebase_options.dart';
 import 'gyms/gym_nav.dart';
 import 'profile_page.dart';
+import 'settings/settings_page.dart';
 
 void main() async {
   // Initialize widgets before initializing Firebase
   WidgetsFlutterBinding.ensureInitialized();
+  Settings.init(cacheProvider: SharePreferenceCache());
 
   // Initialize Firebase using options from firebase_options.dart
   await Firebase.initializeApp(
@@ -58,7 +61,9 @@ class _HomeState extends State<Home> {
       GymNav(navigatorKey: gymNavigatorKey),
       ProfilePage(),
       const Scaffold(
-          appBar: MainAppBar(barTitle: 'Settings'), body: Text('Settings Page')),
+        appBar: MainAppBar(barTitle: 'Settings'),
+        body: SettingsPage(),
+      ),
       RoutePage(),
     ];
   }
@@ -82,8 +87,10 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Routes'),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
-          BottomNavigationBarItem(icon: Icon(Icons.question_mark_rounded), label: 'temp route'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.question_mark_rounded), label: 'temp route'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: bottomColors[_selectedIndex],

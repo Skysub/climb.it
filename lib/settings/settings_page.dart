@@ -117,8 +117,8 @@ void _showResetConfirmationDialog() async {
 }
 
 void resetData() {
-  // Genstart appen ved hjælp af Phoenix
-  Phoenix.rebirth(context);
+  // Genstart appen ved hjælp af Phoenix - muligvis
+  //Phoenix.rebirth(context);
 }
 
 

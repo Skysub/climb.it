@@ -1,3 +1,4 @@
+import 'package:climb_it/gyms/route.dart';
 import 'package:climb_it/gyms/route_item.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +89,13 @@ class GymOverviewState extends State<GymOverview> {
                                     const SizedBox(height: 15),
                                 itemBuilder: (context, index) =>
                                     GestureDetector(
-                                      onTap: () => {},
+                                      onTap: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => RoutePage(
+                                                    route: routes[index])))
+                                      },
                                       child: RouteItem(
                                         climbingRoute: routes[index],
                                         color: Color.lerp(

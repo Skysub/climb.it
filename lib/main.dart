@@ -1,5 +1,4 @@
 import 'package:climb_it/main_app_bar.dart';
-import 'package:climb_it/route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
@@ -64,7 +63,6 @@ class _HomeState extends State<Home> {
         appBar: MainAppBar(barTitle: 'Settings'),
         body: SettingsPage(),
       ),
-      RoutePage(),
     ];
   }
 
@@ -87,10 +85,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Routes'),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle), label: 'Profile'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.question_mark_rounded), label: 'temp route'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: bottomColors[_selectedIndex],

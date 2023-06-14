@@ -1,4 +1,5 @@
 import 'package:climb_it/main_app_bar.dart';
+import 'package:climb_it/route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +47,7 @@ class _HomeState extends State<Home> {
 
   late List<Widget> pages;
 
-  List<Color> bottomColors = [0.0, 0.5, 1.0]
+  List<Color> bottomColors = [0.0, 0.25, 0.5, 1.0]
       .map((e) => Color.lerp(Colors.pink, Colors.orange, e)!)
       .toList();
 
@@ -57,7 +58,8 @@ class _HomeState extends State<Home> {
       GymNav(navigatorKey: gymNavigatorKey),
       ProfilePage(),
       const Scaffold(
-          appBar: MainAppBar(barTitle: 'Settings'), body: Text('Settings Page'))
+          appBar: MainAppBar(barTitle: 'Settings'), body: Text('Settings Page')),
+      RoutePage(),
     ];
   }
 
@@ -81,7 +83,8 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Routes'),
           BottomNavigationBarItem(
               icon: Icon(Icons.account_circle), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(icon: Icon(Icons.question_mark_rounded), label: 'temp route'),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: bottomColors[_selectedIndex],

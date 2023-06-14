@@ -107,7 +107,7 @@ class GymListState extends State<GymList> {
     if (permission == LocationPermission.denied) {
       // If the permission is still 'denied
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.always || permission != LocationPermission.whileInUse) {
+      if (permission != LocationPermission.always && permission != LocationPermission.whileInUse) {
         return false;
       }
     }

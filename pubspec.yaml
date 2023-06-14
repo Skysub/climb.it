@@ -17,6 +17,8 @@ dependencies:
   flutter_settings_screens: ^0.3.3-null-safety+2
   fl_chart: ^0.63.0
   geolocator: ^9.0.2
+  customizable_counter: ^1.0.4
+  shared_preferences: ^2.1.2
 
 
 dev_dependencies:

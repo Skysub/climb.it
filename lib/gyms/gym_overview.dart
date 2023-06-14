@@ -50,8 +50,15 @@ class GymOverview extends StatefulWidget {
   State<GymOverview> createState() => GymOverviewState();
 }
 
+enum RouteSortMode { grade, name }
+
 class GymOverviewState extends State<GymOverview> {
   late Future<List<ClimbingRoute>> routeFuture;
+  late List<ClimbingRoute> routes;
+
+  //TODO Handle sorting more general
+  RouteSortMode sortMode = RouteSortMode.grade;
+  bool sortDescending = false;
 
   @override
   void initState() {
@@ -62,48 +69,89 @@ class GymOverviewState extends State<GymOverview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MainAppBar(barTitle: widget.gym.name),
-        body: RefreshIndicator(
-          onRefresh: updateRouteList,
-          child: FutureBuilder(
-              future: routeFuture,
-              builder: (context, routeSnapshot) {
-                if (routeSnapshot.hasData) {
-                  if (routeSnapshot.data!.isEmpty) {
-                    return const Center(
-                        child: Text('This gym currently has no routes.'));
-                  } else {
-                    List<ClimbingRoute> routes = routeSnapshot.data!;
-                    return Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: ListView.separated(
-                          itemCount: routes.length,
-                          separatorBuilder: (context, index) =>
-                              const SizedBox(height: 15),
-                          itemBuilder: (context, index) =>
-                              GestureDetector(
-                                onTap: () => {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => RoutePage(
-                                              route: routes[index])))
-                                },
-                                child: RouteItem(
-                                  climbingRoute: routes[index],
-                                  color: Color.lerp(
-                                      Colors.pink,
-                                      Colors.orange,
-                                      index / routes.length)!,
-                                ),
-                              )),
-                    );
-                  }
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              }),
-        ));
+      appBar: MainAppBar(barTitle: widget.gym.name),
+      body: RefreshIndicator(
+        onRefresh: updateRouteList,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Wrap(spacing: 5, children: [
+                //TODO Extract SortChip() widget
+                ActionChip(
+                    backgroundColor: sortMode == RouteSortMode.grade ? Colors.pink : null,
+                    avatar: sortMode == RouteSortMode.grade
+                        ? Icon(sortDescending
+                            ? Icons.arrow_downward_rounded
+                            : Icons.arrow_upward_rounded)
+                        : null,
+                    label: const Text('Grade'),
+                    onPressed: () => {
+                          sortDescending = sortMode == RouteSortMode.grade
+                              ? !sortDescending
+                              : sortDescending,
+                          sortMode = RouteSortMode.grade,
+                          sortByDifficulty()
+                        }),
+                ActionChip(
+                    backgroundColor: sortMode == RouteSortMode.name ? Colors.pink : null,
+                    avatar: sortMode == RouteSortMode.name
+                        ? Icon(sortDescending
+                            ? Icons.arrow_downward_rounded
+                            : Icons.arrow_upward_rounded)
+                        : null,
+                    label: const Text('Name'),
+                    onPressed: () => {
+                          sortDescending = sortMode == RouteSortMode.name
+                              ? !sortDescending
+                              : sortDescending,
+                          sortMode = RouteSortMode.name,
+                          sortByName()
+                        }),
+              ]),
+              const SizedBox(height: 10),
+              Flexible(
+                child: FutureBuilder(
+                    future: routeFuture,
+                    builder: (context, routeSnapshot) {
+                      if (routeSnapshot.hasData) {
+                        routes = routeSnapshot.data!;
+                        if (routeSnapshot.data!.isEmpty) {
+                          return const Center(
+                              child: Text('This gym currently has no routes.'));
+                        } else {
+                          return ListView.separated(
+                              itemCount: routes.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 15),
+                              itemBuilder: (context, index) => GestureDetector(
+                                    onTap: () => {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => RoutePage(
+                                                  route: routes[index])))
+                                    },
+                                    child: RouteItem(
+                                      climbingRoute: routes[index],
+                                      color: Color.lerp(
+                                          Colors.pink,
+                                          Colors.orange,
+                                          index / routes.length)!,
+                                    ),
+                                  ));
+                        }
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                    }),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> updateRouteList() async {
@@ -121,5 +169,25 @@ class GymOverviewState extends State<GymOverview> {
     return data.snapshot.children
         .map((e) => ClimbingRoute.fromJSON(e.value as Map))
         .toList();
+  }
+
+  void sortByDifficulty() {
+    setState(() {
+      if (sortDescending) {
+        routes.sort((a, b) => b.difficulty.compareTo(a.difficulty));
+      } else {
+        routes.sort((a, b) => a.difficulty.compareTo(b.difficulty));
+      }
+    });
+  }
+
+  void sortByName() {
+    setState(() {
+      if (sortDescending) {
+        routes.sort((a, b) => b.name.compareTo(a.name));
+      } else {
+        routes.sort((a, b) => a.name.compareTo(b.name));
+      }
+    });
   }
 }

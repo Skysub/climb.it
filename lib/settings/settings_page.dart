@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'icon_widget.dart';
 

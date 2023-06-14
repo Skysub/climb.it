@@ -1,5 +1,3 @@
-//import 'dart:js_interop';
-
 import 'package:climb_it/main_app_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -101,9 +99,8 @@ class GymListState extends State<GymList> {
   }
 
   Future<Map<String, List<double>>> getCoordiantes() async {
-    //Checks/asks permission
-    String? result = await checkLocationPermission();
-    if (result != null) {
+    bool canGetLocation = await checkLocationPermission();
+    if (!canGetLocation) {
       return {};
     }
 
@@ -123,29 +120,31 @@ class GymListState extends State<GymList> {
     return coords;
   }
 
-  Future<String?> checkLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // Test if location services are enabled.
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return 'Location service offline';
+  Future<bool> checkLocationPermission() async {
+    // Return false if the location service isn't enabled
+    bool locationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!locationServiceEnabled) {
+      return false;
     }
 
-    //ask for permission
-    permission = await Geolocator.checkPermission();
+    // Check location permission
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    // If 'deniedForever' then we can't get the location
+    if (permission == LocationPermission.deniedForever) {
+      return false;
+    }
+
+    // If 'denied', ask for the permission again
     if (permission == LocationPermission.denied) {
+      // If the permission is still 'denied
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        return 'Location permissions denied';
+        return false;
       }
     }
 
-    if (permission == LocationPermission.deniedForever) {
-      return 'Never getting a location';
-    }
-
-    return null;
+    // Else we have 'whileInUse' or 'always', which means we can get the location
+    return true;
   }
 }

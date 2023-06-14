@@ -1,3 +1,4 @@
+
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -55,31 +56,27 @@ class ProfilePage extends StatelessWidget {
               const Align(
                   alignment: Alignment.centerLeft, child: Text('Routes:')),
               const SizedBox(height: 20),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text('0'),
-                  Text('1'),
-                  Text('2'),
-                  Text('3'),
-                  Text('4'),
-                  Text('5'),
-                  Text('6'),
-                  Text('7'),
-                ],
+              const Padding(
+                padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text('0'),
+                    Text('1'),
+                    Text('2'),
+                    Text('3'),
+                    Text('4'),
+                    Text('5'),
+                    Text('6'),
+                    Text('7'),
+                  ],
+                ),
               ),
               const SizedBox(height: 5),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('V0'),
-                  Text('V1'),
-                  Text('V2'),
-                  Text('V3'),
-                  Text('V4'),
-                  Text('V5'),
-                  Text('V6'),
-                  Text('V7'),
+                  
                 ],
               ),
               const SizedBox(height: 40),

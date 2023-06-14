@@ -7,11 +7,14 @@ import 'gym.dart';
 
 class ClimbingRoute {
   final String name;
+  final String difficulty;
 
-  ClimbingRoute({required this.name});
+  ClimbingRoute({required this.name, required this.difficulty});
 
   static ClimbingRoute fromJSON(Map<dynamic, dynamic> json) {
-    return ClimbingRoute(name: json['name']);
+    return ClimbingRoute(
+        name: json['name'],
+        difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '');
   }
 }
 
@@ -49,6 +52,10 @@ class GymOverviewState extends State<GymOverview> {
                     future: routeFuture,
                     builder: (context, routeSnapshot) {
                       if (routeSnapshot.hasData) {
+                        if (routeSnapshot.data!.isEmpty) {
+                          return const Center(child: Text('This gym currently has no routes.'));
+                        }
+                        else {
                         List<ClimbingRoute> routes = routeSnapshot.data!;
                         return Padding(
                           padding: const EdgeInsets.all(10),
@@ -67,6 +74,8 @@ class GymOverviewState extends State<GymOverview> {
                                     ),
                                   )),
                         );
+
+                        }
                       } else {
                         return const Center(child: CircularProgressIndicator());
                       }

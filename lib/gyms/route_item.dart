@@ -28,16 +28,15 @@ class RouteItem extends StatelessWidget {
                         style: const TextStyle(fontSize: 24))),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10, right: 10),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10, right: 10),
               child: Row(
                 children: [
                   Expanded(
                       child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text(
-                      'V69',
-                      style: TextStyle(fontSize: 14),
+                    child: Text(climbingRoute.difficulty,
+                      style: const TextStyle(fontSize: 14),
                     ),
                   ))
                 ],

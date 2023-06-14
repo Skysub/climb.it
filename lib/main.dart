@@ -65,10 +65,9 @@ class _HomeState extends State<Home> {
 
   _selectTab(int index) {
     setState(() {
-      //Jumpes to the gym list page if the routes button is pressed while already on the routes screen
-      if (_selectedIndex == index && index == 0) {
-        gymNavigatorKey.currentState
-            ?.popUntil(ModalRoute.withName("/GymListPage"));
+      // Jump to the root route when pressing the BottomNavBarItem that is currently selected
+      if (_selectedIndex == index) {
+        gymNavigatorKey.currentState?.popUntil((route) => route.isFirst);
       }
       _selectedIndex = index;
     });

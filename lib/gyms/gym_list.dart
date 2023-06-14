@@ -70,54 +70,22 @@ class GymListState extends State<GymList> {
   }
 
   Future<List<Gym>> getGymList() async {
-    List data = await Future.wait([
-      FirebaseDatabase.instance.ref().child('gyms').once(),
-      getCoordiantes()
-    ]);
-    DatabaseEvent d0 = data[0];
-    return gymLocationSort(
-        d0.snapshot.children
-            .map((e) => Gym.fromJSON(e.value as Map, e.key ?? ''))
-            .toList(),
-        data[1]);
-  }
+    var data = await FirebaseDatabase.instance.ref().child('gyms').once();
+    var gymList = data.snapshot.children
+        .map((e) => Gym.fromJSON(e.value as Map, e.key ?? ''))
+        .toList();
 
-  List<Gym> gymLocationSort(List<Gym> gyms, Map<String, List<double>> coords) {
-    if (coords.isEmpty) {
-      return gyms;
-    }
-    //Sets the distance for each gym
-    for (Gym x in gyms) {
-      x.distance = 0.001 *
-          Geolocator.distanceBetween(coords['userCoords']![0],
-              coords['userCoords']![1], coords[x.key]![0], coords[x.key]![1]);
+    // If we have/get location permission, calculate the distance to each gym
+    if (await checkLocationPermission()) {
+      Position pos = await Geolocator.getCurrentPosition();
+      for (Gym g in gymList) {
+        g.distanceKm = 0.001 * Geolocator.distanceBetween(g.latitude, g.longitude, pos.latitude, pos.longitude);
+      }
+      // Sort the list by distance
+      gymList.sort((a, b) => a.distanceKm!.compareTo(b.distanceKm!));
     }
 
-    gyms.sort((g1, g2) => g1.distance.compareTo(g2.distance));
-
-    return gyms;
-  }
-
-  Future<Map<String, List<double>>> getCoordiantes() async {
-    bool canGetLocation = await checkLocationPermission();
-    if (!canGetLocation) {
-      return {};
-    }
-
-    //Now we get the locations
-    List data = await Future.wait([
-      Geolocator.getCurrentPosition(),
-      FirebaseDatabase.instance.ref().child('gym_coordinates').once()
-    ]);
-    DatabaseEvent gymData = data[1];
-    var coords = Map<String, List<double>>.fromEntries(gymData.snapshot.children
-        .map((e) => MapEntry<String, List<double>>(e.key!, [
-              e.children.first.value as double,
-              e.children.last.value as double
-            ])));
-    coords.putIfAbsent('userCoords',
-        () => [data[0].latitude as double, data[0].longitude as double]);
-    return coords;
+    return gymList;
   }
 
   Future<bool> checkLocationPermission() async {
@@ -139,11 +107,10 @@ class GymListState extends State<GymList> {
     if (permission == LocationPermission.denied) {
       // If the permission is still 'denied
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
+      if (permission != LocationPermission.always || permission != LocationPermission.whileInUse) {
         return false;
       }
     }
-
     // Else we have 'whileInUse' or 'always', which means we can get the location
     return true;
   }

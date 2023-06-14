@@ -11,38 +11,38 @@ class RouteItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            color: color),
-        height: 100,
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, top: 24),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(climbingRoute.name,
-                        style: const TextStyle(fontSize: 24))),
+            if (climbingRoute.imageUrl.isNotEmpty)
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  climbingRoute.imageUrl,
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10, right: 10),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Text(climbingRoute.difficulty,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ))
-                ],
-              ),
-            )
+            const SizedBox(height: 5),
+            Wrap(
+              spacing: 8,
+              runSpacing: -5,
+              children: [
+                for (String tag in climbingRoute.tags)
+                  Chip(label: Text(tag, style: const TextStyle(color: Colors.white)), elevation: 2, backgroundColor: climbingRoute.color),
+              ]),
+            const SizedBox(height: 5),
+            Text('${climbingRoute.name} - ${climbingRoute.difficulty}'),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }

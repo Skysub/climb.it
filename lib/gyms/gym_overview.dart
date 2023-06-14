@@ -8,13 +8,36 @@ import 'gym.dart';
 class ClimbingRoute {
   final String name;
   final String difficulty;
+  final String imageUrl;
+  final List<String> tags;
+  final Color color;
 
-  ClimbingRoute({required this.name, required this.difficulty});
+  ClimbingRoute(
+      {required this.name,
+      required this.difficulty,
+      required this.imageUrl,
+      required this.tags,
+      required this.color});
 
   static ClimbingRoute fromJSON(Map<dynamic, dynamic> json) {
     return ClimbingRoute(
         name: json['name'],
-        difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '');
+        difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '',
+        imageUrl: json['img_url'] ??
+            'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
+        tags: json['tags'] != null ? json['tags'].split(';') : [],
+        color: getColor(json['color']));
+  }
+
+  static Color getColor(String? json) {
+    switch (json) {
+      case 'red':
+        return Colors.red;
+      case 'green':
+        return Colors.green;
+      default:
+        return Colors.pink;
+    }
   }
 }
 
@@ -53,28 +76,28 @@ class GymOverviewState extends State<GymOverview> {
                     builder: (context, routeSnapshot) {
                       if (routeSnapshot.hasData) {
                         if (routeSnapshot.data!.isEmpty) {
-                          return const Center(child: Text('This gym currently has no routes.'));
-                        }
-                        else {
-                        List<ClimbingRoute> routes = routeSnapshot.data!;
-                        return Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: ListView.separated(
-                              itemCount: routes.length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 15),
-                              itemBuilder: (context, index) => GestureDetector(
-                                    onTap: () => {},
-                                    child: RouteItem(
-                                      climbingRoute: routes[index],
-                                      color: Color.lerp(
-                                          Colors.pink,
-                                          Colors.orange,
-                                          index / routes.length)!,
-                                    ),
-                                  )),
-                        );
-
+                          return const Center(
+                              child: Text('This gym currently has no routes.'));
+                        } else {
+                          List<ClimbingRoute> routes = routeSnapshot.data!;
+                          return Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: ListView.separated(
+                                itemCount: routes.length,
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 15),
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
+                                      onTap: () => {},
+                                      child: RouteItem(
+                                        climbingRoute: routes[index],
+                                        color: Color.lerp(
+                                            Colors.pink,
+                                            Colors.orange,
+                                            index / routes.length)!,
+                                      ),
+                                    )),
+                          );
                         }
                       } else {
                         return const Center(child: CircularProgressIndicator());

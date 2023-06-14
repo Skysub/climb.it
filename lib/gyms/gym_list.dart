@@ -88,7 +88,6 @@ class GymListState extends State<GymList> {
     if (coords.isEmpty) {
       return gyms;
     }
-    print(coords['userCoords']);
     //Sets the distance for each gym
     for (Gym x in gyms) {
       x.distance = 0.001 *

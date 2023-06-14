@@ -30,6 +30,7 @@ class ClimbingRoute {
         color: getColor(json['color']));
   }
 
+  //TODO Handle more colors
   static Color getColor(String? json) {
     switch (json) {
       case 'red':
@@ -56,14 +57,13 @@ class GymOverviewState extends State<GymOverview> {
   late Future<List<ClimbingRoute>> routeFuture;
   late List<ClimbingRoute> routes;
 
-  //TODO Handle sorting more general
   RouteSortMode sortMode = RouteSortMode.grade;
   bool sortDescending = false;
 
   @override
   void initState() {
     super.initState();
-    routeFuture = getData();
+    routeFuture = getRouteData();
   }
 
   @override
@@ -78,37 +78,18 @@ class GymOverviewState extends State<GymOverview> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Wrap(spacing: 5, children: [
-                //TODO Extract SortChip() widget
-                ActionChip(
-                    backgroundColor: sortMode == RouteSortMode.grade ? Colors.pink : null,
-                    avatar: sortMode == RouteSortMode.grade
-                        ? Icon(sortDescending
-                            ? Icons.arrow_downward_rounded
-                            : Icons.arrow_upward_rounded)
-                        : null,
-                    label: const Text('Grade'),
-                    onPressed: () => {
-                          sortDescending = sortMode == RouteSortMode.grade
-                              ? !sortDescending
-                              : sortDescending,
-                          sortMode = RouteSortMode.grade,
-                          sortByDifficulty()
-                        }),
-                ActionChip(
-                    backgroundColor: sortMode == RouteSortMode.name ? Colors.pink : null,
-                    avatar: sortMode == RouteSortMode.name
-                        ? Icon(sortDescending
-                            ? Icons.arrow_downward_rounded
-                            : Icons.arrow_upward_rounded)
-                        : null,
-                    label: const Text('Name'),
-                    onPressed: () => {
-                          sortDescending = sortMode == RouteSortMode.name
-                              ? !sortDescending
-                              : sortDescending,
-                          sortMode = RouteSortMode.name,
-                          sortByName()
-                        }),
+                SortChip(
+                    selectedSortMode: sortMode,
+                    sortMode: RouteSortMode.grade,
+                    label: 'Grade',
+                    sortDescending: sortDescending,
+                    callback: () => changeSorting(RouteSortMode.grade)),
+                SortChip(
+                    selectedSortMode: sortMode,
+                    sortMode: RouteSortMode.name,
+                    label: 'Name',
+                    sortDescending: sortDescending,
+                    callback: () => changeSorting(RouteSortMode.name)),
               ]),
               const SizedBox(height: 10),
               Flexible(
@@ -117,6 +98,7 @@ class GymOverviewState extends State<GymOverview> {
                     builder: (context, routeSnapshot) {
                       if (routeSnapshot.hasData) {
                         routes = routeSnapshot.data!;
+                        sortRoutes();
                         if (routeSnapshot.data!.isEmpty) {
                           return const Center(
                               child: Text('This gym currently has no routes.'));
@@ -156,11 +138,11 @@ class GymOverviewState extends State<GymOverview> {
 
   Future<void> updateRouteList() async {
     setState(() {
-      routeFuture = getData();
+      routeFuture = getRouteData();
     });
   }
 
-  Future<List<ClimbingRoute>> getData() async {
+  Future<List<ClimbingRoute>> getRouteData() async {
     var data = await FirebaseDatabase.instance
         .ref()
         .child('routes')
@@ -171,23 +153,54 @@ class GymOverviewState extends State<GymOverview> {
         .toList();
   }
 
-  void sortByDifficulty() {
+  void changeSorting(RouteSortMode clickedMode) {
     setState(() {
-      if (sortDescending) {
-        routes.sort((a, b) => b.difficulty.compareTo(a.difficulty));
-      } else {
-        routes.sort((a, b) => a.difficulty.compareTo(b.difficulty));
-      }
+      sortDescending = sortMode == clickedMode && !sortDescending;
+      sortMode = clickedMode;
+      sortRoutes();
     });
   }
 
-  void sortByName() {
-    setState(() {
-      if (sortDescending) {
-        routes.sort((a, b) => b.name.compareTo(a.name));
-      } else {
+  void sortRoutes() {
+    switch (sortMode) {
+      case RouteSortMode.grade:
+        routes.sort((a, b) => a.difficulty.compareTo(b.difficulty));
+        break;
+      case RouteSortMode.name:
         routes.sort((a, b) => a.name.compareTo(b.name));
-      }
-    });
+        break;
+    }
+    if (sortDescending) {
+      routes = routes.reversed.toList();
+    }
+  }
+}
+
+class SortChip extends StatelessWidget {
+  const SortChip(
+      {super.key,
+      required this.selectedSortMode,
+      required this.sortMode,
+      required this.label,
+      required this.sortDescending,
+      required this.callback});
+
+  final RouteSortMode selectedSortMode;
+  final RouteSortMode sortMode;
+  final String label;
+  final bool sortDescending;
+  final VoidCallback callback;
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionChip(
+        backgroundColor: selectedSortMode == sortMode ? Colors.pink : null,
+        avatar: selectedSortMode == sortMode
+            ? Icon(sortDescending
+                ? Icons.arrow_downward_rounded
+                : Icons.arrow_upward_rounded)
+            : null,
+        label: Text(label),
+        onPressed: callback);
   }
 }

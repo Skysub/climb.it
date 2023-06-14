@@ -1,8 +1,10 @@
-import 'package:climb_it/gyms.dart';
+import 'package:climb_it/main_app_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:climb_it/profile.dart';
+
 import 'firebase_options.dart';
+import 'gyms/gym_nav.dart';
+import 'profile_page.dart';
 
 void main() async {
   // Initialize widgets before initializing Firebase
@@ -44,15 +46,32 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
+  GlobalKey<NavigatorState> gymNavigatorKey = GlobalKey();
 
-  final List<Widget> pages = [
-    const GymPage(key: PageStorageKey('gyms')),
-    ProfilePage(),
-    const Text('Settings Page')
-  ];
+  late List<Widget> pages;
+
+  List<Color> bottomColors = [0.0, 0.5, 1.0]
+      .map((e) => Color.lerp(Colors.pink, Colors.orange, e)!)
+      .toList();
+
+  @override
+  void initState() {
+    super.initState();
+    pages = [
+      GymNav(navigatorKey: gymNavigatorKey),
+      ProfilePage(),
+      const Scaffold(
+          appBar: MainAppBar(barTitle: 'Settings'), body: Text('Settings Page'))
+    ];
+  }
 
   _selectTab(int index) {
     setState(() {
+      //Jumpes to the gym list page if the routes button is pressed while already on the routes screen
+      if (_selectedIndex == index && index == 0) {
+        gymNavigatorKey.currentState
+            ?.popUntil(ModalRoute.withName("/GymListPage"));
+      }
       _selectedIndex = index;
     });
   }
@@ -60,15 +79,6 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('climb.it'),
-        flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Colors.pink, Colors.orange]))),
-      ),
       body: IndexedStack(index: _selectedIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
@@ -78,7 +88,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.pink[400],
+        selectedItemColor: bottomColors[_selectedIndex],
         onTap: _selectTab,
       ),
     );

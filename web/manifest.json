@@ -1,6 +1,6 @@
 {
-    "name": "treugers_projekt_flutter",
-    "short_name": "treugers_projekt_flutter",
+    "name": "com.climb.it",
+    "short_name": "com.climb.it",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

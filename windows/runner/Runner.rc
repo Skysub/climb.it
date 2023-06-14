@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "treugers_projekt_flutter" "\0"
+            VALUE "FileDescription", "com.climb.it" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "treugers_projekt_flutter" "\0"
+            VALUE "InternalName", "com.climb.it" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "treugers_projekt_flutter.exe" "\0"
-            VALUE "ProductName", "treugers_projekt_flutter" "\0"
+            VALUE "OriginalFilename", "com.climb.it.exe" "\0"
+            VALUE "ProductName", "com.climb.it" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -71,7 +71,7 @@ class DefaultFirebaseOptions {
     databaseURL: 'https://klatre-app1-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'klatre-app1.appspot.com',
     iosClientId: '808817238237-adm1vuhfoqeuj8rl81gp3n0bqpip34po.apps.googleusercontent.com',
-    iosBundleId: 'com.example.treugersProjektFlutter',
+    iosBundleId: 'com.climb.it',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -82,6 +82,6 @@ class DefaultFirebaseOptions {
     databaseURL: 'https://klatre-app1-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'klatre-app1.appspot.com',
     iosClientId: '808817238237-ie7nt5s7me27uh44508433n4jml5ful9.apps.googleusercontent.com',
-    iosBundleId: 'com.example.treugersProjektFlutter.RunnerTests',
+    iosBundleId: 'com.climb.it.RunnerTests',
   );
 }

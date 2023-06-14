@@ -22,7 +22,7 @@ class ProfilePage extends StatelessWidget {
                   child: IconButton(
                     icon: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.asset('brix.jpg')),
+                        child: Image.asset('assets/brix.jpg')),
                     iconSize: 50,
                     onPressed: () {},
                   )),

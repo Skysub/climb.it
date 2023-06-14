@@ -27,12 +27,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      //home: const Home(),
-
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const Home(),
-      },
+      themeMode: ThemeMode.dark,
+      home: const Home(),
     );
   }
 }

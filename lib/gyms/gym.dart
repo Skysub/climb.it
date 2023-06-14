@@ -1,6 +1,7 @@
 class Gym {
   final String key;
   final String name;
+  double distance = -1;
 
   Gym({required this.key, required this.name});
 

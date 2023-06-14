@@ -19,7 +19,9 @@ class GymItem extends StatelessWidget {
         padding: const EdgeInsets.only(left: 20),
         child: Align(
             alignment: Alignment.centerLeft,
-            child: Text(gym.name, style: const TextStyle(fontSize: 24))),
+            child: Text(
+                "${gym.name} _dist: ${gym.distance.toStringAsFixed(1)} km",
+                style: const TextStyle(fontSize: 24))),
       ),
     );
   }

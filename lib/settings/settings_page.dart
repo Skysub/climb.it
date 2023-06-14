@@ -69,7 +69,8 @@ class _SettingsPageState extends State<SettingsPage> {
         onTap: () {
           _showResetConfirmationDialog(); // Method to show confirmationsdialog
           const snackBar = SnackBar(
-            content: Text('Yay! A SnackBar!'), //just added to check if the tile was pressed
+            content: Text(
+                'Yay! A SnackBar!'), //just added to check if the tile was pressed
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         },
@@ -85,43 +86,43 @@ class _SettingsPageState extends State<SettingsPage> {
         },
       );
 
-void _showResetConfirmationDialog() async {
-  bool resetConfirmed = await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Reset Data'),
-        content: const Text('Are you sure you want to reset your data?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false); // close the dialog 'false' (close)
-            },
-            child: const Text('Close'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true); // close the dialog 'true' (accept)
-            },
-            child: const Text('Accept'),
-          ),
-        ],
-      );
-    },
-  );
+  void _showResetConfirmationDialog() async {
+    bool resetConfirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Reset Data'),
+          content: const Text('Are you sure you want to reset your data?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(false); // close the dialog 'false' (close)
+              },
+              child: const Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(true); // close the dialog 'true' (accept)
+              },
+              child: const Text('Accept'),
+            ),
+          ],
+        );
+      },
+    );
 
-  if (resetConfirmed == true) {
-    // Kald en metode til at nulstille data
-    resetData();
+    if (resetConfirmed == true) {
+      // Kald en metode til at nulstille data
+      resetData();
+    }
   }
-}
 
-void resetData() {
-  // Genstart appen ved hjælp af Phoenix - muligvis
-  //Phoenix.rebirth(context);
-}
-
-
+  void resetData() {
+    // Genstart appen ved hjælp af Phoenix - muligvis
+    //Phoenix.rebirth(context);
+  }
 
   void _showHelpAndSupport() async {
     showDialog(
@@ -139,7 +140,7 @@ void resetData() {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
               child: const Text('Close'),
             ),

@@ -26,5 +26,5 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/brix.jpg
+    - assets/
   uses-material-design: true

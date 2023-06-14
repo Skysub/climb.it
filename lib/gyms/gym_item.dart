@@ -10,18 +10,26 @@ class GymItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: color),
-      height: 100,
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 4,
+      color: color,
       child: Padding(
-        padding: const EdgeInsets.only(left: 20),
+        padding: const EdgeInsets.all(20),
         child: Align(
             alignment: Alignment.centerLeft,
-            child: Text(
-                "${gym.name} _dist: ${gym.distance.toStringAsFixed(1)} km",
-                style: const TextStyle(fontSize: 24))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(gym.name, style: const TextStyle(fontSize: 24)),
+                Column(
+                  children: [
+                  const Icon(Icons.location_on),
+                  const SizedBox(height: 3),
+                  Text("${gym.distance.toStringAsFixed(1)} km"),
+                ]),
+              ],
+            )),
       ),
     );
   }

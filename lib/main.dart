@@ -49,10 +49,6 @@ class _HomeState extends State<Home> {
 
   late List<Widget> pages;
 
-  List<Color> bottomColors = [0.0, 0.25, 0.5, 1.0]
-      .map((e) => Color.lerp(Colors.pink, Colors.orange, e)!)
-      .toList();
-
   @override
   void initState() {
     super.initState();
@@ -88,7 +84,7 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: bottomColors[_selectedIndex],
+        selectedItemColor: Color.lerp(Colors.pink, Colors.orange, _selectedIndex/pages.length),
         onTap: _selectTab,
       ),
     );

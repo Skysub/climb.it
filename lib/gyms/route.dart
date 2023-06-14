@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/gym_overview.dart';
 import 'package:climb_it/main_app_bar.dart';
@@ -95,7 +93,6 @@ class _RoutePageState extends State<RoutePage> {
                 borderRadius: 100,
                 buttonText: 'Click me after an atempt!',
                 showButtonText: true,
-
                 count: preferences!.getDouble("counter") ?? 0,
                 step: 1,
                 minCount: 0,
@@ -106,7 +103,7 @@ class _RoutePageState extends State<RoutePage> {
                 decrementIcon: const Icon(
                   Icons.remove,
                   color: Colors.orange,
-                ),  
+                ),
                 onIncrement: (e) => attemptCounter = e,
               )
             ],
@@ -116,4 +113,3 @@ class _RoutePageState extends State<RoutePage> {
     );
   }
 }
-

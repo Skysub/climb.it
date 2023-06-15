@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'gym_overview.dart';
 
 class RouteItem extends StatelessWidget {
-  const RouteItem(
-      {super.key, required this.climbingRoute, required this.color});
+  const RouteItem({super.key, required this.climbingRoute});
 
   final ClimbingRoute climbingRoute;
-  final Color color;
 
   @override
   Widget build(BuildContext context) {

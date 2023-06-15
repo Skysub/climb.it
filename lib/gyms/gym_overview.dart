@@ -56,9 +56,12 @@ enum RouteSortMode { grade, name }
 class GymOverviewState extends State<GymOverview> {
   late Future<List<ClimbingRoute>> routeFuture;
   late List<ClimbingRoute> routes;
+  late List<ClimbingRoute> displayedRoutes;
 
   RouteSortMode sortMode = RouteSortMode.grade;
   bool sortDescending = false;
+
+  Set<String> tagFilters = {};
 
   @override
   void initState() {
@@ -77,19 +80,84 @@ class GymOverviewState extends State<GymOverview> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Wrap(spacing: 5, children: [
+              Row(children: [
                 SortChip(
                     selectedSortMode: sortMode,
                     sortMode: RouteSortMode.grade,
                     label: 'Grade',
                     sortDescending: sortDescending,
                     callback: () => changeSorting(RouteSortMode.grade)),
+                const SizedBox(width: 10),
                 SortChip(
                     selectedSortMode: sortMode,
                     sortMode: RouteSortMode.name,
                     label: 'Name',
                     sortDescending: sortDescending,
                     callback: () => changeSorting(RouteSortMode.name)),
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.centerRight,
+                        child: ActionChip(
+                            label: const Text('Tags'),
+                            backgroundColor:
+                                tagFilters.isEmpty ? null : Colors.pink,
+                            //TODO Extract Dialog to separate Widget
+                            onPressed: () => showDialog(
+                                    context: context,
+                                    builder: (context) => StatefulBuilder(
+                                          builder: (context, setState) =>
+                                              Dialog(
+                                                  child: Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Wrap(
+                                                  spacing: 5,
+                                                  children: [
+                                                    for (String tag
+                                                        in getAllTags())
+                                                      FilterChip(
+                                                          backgroundColor:
+                                                              Colors.grey[700],
+                                                          selectedColor:
+                                                              Colors.pink,
+                                                          label: Text(tag),
+                                                          selected: tagFilters
+                                                              .contains(tag),
+                                                          onSelected:
+                                                              (selected) {
+                                                            setState(() {
+                                                              if (selected) {
+                                                                tagFilters
+                                                                    .add(tag);
+                                                              } else {
+                                                                tagFilters
+                                                                    .remove(
+                                                                        tag);
+                                                              }
+                                                            });
+                                                          })
+                                                  ],
+                                                ),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('Close',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.pink)))
+                                              ],
+                                            ),
+                                          )),
+                                        )).then((value) {
+                                  setState(() {
+                                    sortRoutes();
+                                  });
+                                }))))
               ]),
               const SizedBox(height: 10),
               Flexible(
@@ -105,24 +173,22 @@ class GymOverviewState extends State<GymOverview> {
                         } else {
                           return Scrollbar(
                             child: ListView.separated(
-                                itemCount: routes.length,
+                                itemCount: displayedRoutes.length,
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(height: 15),
-                                itemBuilder: (context, index) => GestureDetector(
+                                itemBuilder: (context, index) =>
+                                    GestureDetector(
                                       onTap: () => {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => RoutePage(
-                                                    route: routes[index])))
+                                                    route: displayedRoutes[
+                                                        index])))
                                       },
                                       child: RouteItem(
-                                        climbingRoute: routes[index],
-                                        color: Color.lerp(
-                                            Colors.pink,
-                                            Colors.orange,
-                                            index / routes.length)!,
-                                      ),
+                                          climbingRoute:
+                                              displayedRoutes[index]),
                                     )),
                           );
                         }
@@ -175,6 +241,23 @@ class GymOverviewState extends State<GymOverview> {
     if (sortDescending) {
       routes = routes.reversed.toList();
     }
+    if (tagFilters.isNotEmpty) {
+      displayedRoutes = routes
+          .where((route) => route.tags.any((tag) => tagFilters.contains(tag)))
+          .toList();
+    } else {
+      displayedRoutes = routes;
+    }
+  }
+
+  List<String> getAllTags() {
+    Set<String> tagSet = {};
+    for (var route in routes) {
+      tagSet.addAll(route.tags);
+    }
+    List<String> tagList = tagSet.toList();
+    tagList.sort();
+    return tagList;
   }
 }
 

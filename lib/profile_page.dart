@@ -21,10 +21,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< Updated upstream
-=======
-      resizeToAvoidBottomInset: false,
->>>>>>> Stashed changes
       appBar: const MainAppBar(barTitle: 'Profile'),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

@@ -7,12 +7,12 @@ class ProfilePage extends StatelessWidget {
   ProfilePage({super.key});
 
   final List<double> vAmounts = [
-    0.0,
-    1.0,
-    2.0,
-    3.0,
-    4.0,
-    5.0,
+    14.0,
+    11.0,
+    8.0,
+    6.0,
+    9.0,
+    10.0,
     6.0,
     7.0,
   ];
@@ -21,6 +21,10 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< Updated upstream
+=======
+      resizeToAvoidBottomInset: false,
+>>>>>>> Stashed changes
       appBar: const MainAppBar(barTitle: 'Profile'),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -43,7 +47,10 @@ class ProfilePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Christian Brix'),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                      child: Text('Christian Brix'),
+                    ),
                     const SizedBox(width: 10),
                     InkWell(
                       onTap: () {},
@@ -63,34 +70,81 @@ class ProfilePage extends StatelessWidget {
                   ],
                 ),
               ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                  child: SizedBox(
-                    height: 200,
-                    child: MyBarGraph(vAmmount: vAmounts,
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.orange,
+                  border: Border.all(
+                    color: Colors.orange,
+                    width: 5,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [ 
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 4,
+                    )
+                  ]
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      child: Column(
+                        children: [
+                          const Text('Routes:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                          SizedBox(
+                            height: 200,
+                            child: MyBarGraph(vAmmount: vAmounts,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                )
               ),
               const SizedBox(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(children: [
-                    const Text('Most Visited Centres:'),
-                    const SizedBox(height: 10),
-                    for (var center in centers) Text(center)
-                  ]),
-                  Column(
-                    children: [
-                      const Text('Recently Visited Centres:'),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.pink,
+                  border: Border.all(
+                    color: Colors.pink,
+                    width: 5,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 4,
+                  ),],
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(children: [
+                      const Text('Most Visited Centres:', 
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),),
                       const SizedBox(height: 10),
-                      for (var center in centers.reversed) Text(center)
-                    ],
-                  )
-                ],
+                      for (var center in centers) Text(center)
+                    ]),
+                    Column(
+                      children: [
+                        const Text('Recently Visited Centres:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                        const SizedBox(height: 10),
+                        for (var center in centers.reversed) Text(center)
+                      ],
+                    )
+                  ],
+                ),
               )
             ],
           ),
@@ -99,15 +153,3 @@ class ProfilePage extends StatelessWidget {
     );
   }
 }
-
-
-/*
-       
-      body: Center(
-        child: SizedBox(
-          height: 200,
-          child: MyBarGraph(
-            vAmmount: vAmounts,
-          )),
-      ),
-      */

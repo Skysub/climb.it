@@ -103,26 +103,28 @@ class GymOverviewState extends State<GymOverview> {
                           return const Center(
                               child: Text('This gym currently has no routes.'));
                         } else {
-                          return ListView.separated(
-                              itemCount: routes.length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 15),
-                              itemBuilder: (context, index) => GestureDetector(
-                                    onTap: () => {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => RoutePage(
-                                                  route: routes[index])))
-                                    },
-                                    child: RouteItem(
-                                      climbingRoute: routes[index],
-                                      color: Color.lerp(
-                                          Colors.pink,
-                                          Colors.orange,
-                                          index / routes.length)!,
-                                    ),
-                                  ));
+                          return Scrollbar(
+                            child: ListView.separated(
+                                itemCount: routes.length,
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 15),
+                                itemBuilder: (context, index) => GestureDetector(
+                                      onTap: () => {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => RoutePage(
+                                                    route: routes[index])))
+                                      },
+                                      child: RouteItem(
+                                        climbingRoute: routes[index],
+                                        color: Color.lerp(
+                                            Colors.pink,
+                                            Colors.orange,
+                                            index / routes.length)!,
+                                      ),
+                                    )),
+                          );
                         }
                       } else {
                         return const Center(child: CircularProgressIndicator());

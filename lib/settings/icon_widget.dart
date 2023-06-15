@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class IconWidget extends StatelessWidget {
-
   final IconData icon;
   final Color color;
 
@@ -9,7 +8,7 @@ class IconWidget extends StatelessWidget {
     Key? key,
     required this.icon,
     required this.color,
-  }):super (key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

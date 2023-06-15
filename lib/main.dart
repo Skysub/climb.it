@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'firebase_options.dart';
 import 'gyms/gym_nav.dart';
@@ -20,7 +21,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+   runApp(
+    Phoenix(
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -31,7 +36,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   late SharedPreferences _prefs;
   bool isDarkMode = false;
 
@@ -62,21 +66,22 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-    title: 'Flutter Demo',
-    theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-    themeMode: ThemeMode.dark,
-    home: DarkModeInheritedWidget(
-      isDarkMode: isDarkMode,
-      toggleDarkMode: toggleDarkMode,
-      child: ScrollbarTheme(
-        data: ScrollbarThemeData(
-          thumbColor: MaterialStateProperty.all(Colors.pink.withOpacity(0.75)),
+      title: 'Flutter Demo',
+      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+      themeMode: ThemeMode.dark,
+      home: DarkModeInheritedWidget(
+        isDarkMode: isDarkMode,
+        toggleDarkMode: toggleDarkMode,
+        child: ScrollbarTheme(
+          data: ScrollbarThemeData(
+            thumbColor:
+                MaterialStateProperty.all(Colors.pink.withOpacity(0.75)),
+          ),
+          child: const Home(),
         ),
-        child: const Home(),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class Home extends StatefulWidget {

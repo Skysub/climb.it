@@ -82,11 +82,12 @@ class _SettingsPageState extends State<SettingsPage> {
       value: isDarkMode!,
       onChanged: (value) => toggleDarkMode(value),
       title: const Text('Dark Mode'),
-      secondary: const Icon(Icons.dark_mode_outlined, color: Colors.pink),
+      secondary:
+          const IconWidget(icon: Icons.dark_mode_outlined, color: Colors.pink),
     );
   }
 
-    Widget buildResetData() => SimpleSettingsTile(
+  Widget buildResetData() => SimpleSettingsTile(
         title: 'Reset Data',
         subtitle: '',
         leading:
@@ -97,42 +98,44 @@ class _SettingsPageState extends State<SettingsPage> {
       );
 
   void _showResetConfirmationDialog() async {
-  bool resetConfirmed = await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Reset Data'),
-        content: const Text('Are you sure you want to reset your data?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false); // close the dialog 'false' (close)
-            },
-            child: const Text('Close'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true); // close the dialog 'true' (accept)
-            },
-            child: const Text('Accept'),
-          ),
-        ],
-      );
-    },
-  );
-
-  if (resetConfirmed == true) {
-    resetData();
+    bool resetConfirmed = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Reset Data'),
+          content: const Text('Are you sure you want to reset your data?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(false); // close the dialog 'false' (close)
+              },
+              child: const Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context)
+                    .pop(true); // close the dialog 'true' (accept)
+              },
+              child: const Text('Accept'),
+            ),
+          ],
+        );
+      },
+    );
+    if (resetConfirmed == true) {
+      resetData();
+    }
   }
-}
 
-void resetData() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.clear();
-  // ignore: use_build_context_synchronously
-  Phoenix.rebirth(context);
-}
- Widget buildHelpAndSupport() => SimpleSettingsTile(
+  void resetData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    // ignore: use_build_context_synchronously
+    Phoenix.rebirth(context);
+  }
+
+  Widget buildHelpAndSupport() => SimpleSettingsTile(
         title: 'Help/Support',
         subtitle: '',
         leading: const IconWidget(

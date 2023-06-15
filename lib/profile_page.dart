@@ -45,7 +45,12 @@ class ProfilePage extends StatelessWidget {
                   children: [
                     const Padding(
                       padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
-                      child: Text('Christian Brix'),
+                      child: Text(
+                        'Christian Brix', 
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                      ),),
                     ),
                     const SizedBox(width: 10),
                     InkWell(

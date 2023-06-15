@@ -35,7 +35,7 @@ class MyBarGraph extends StatelessWidget {
           rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
-              showTitles: true, 
+              showTitles: true,
               getTitlesWidget: getBottomTitles,
             ),
           ),
@@ -60,7 +60,7 @@ class MyBarGraph extends StatelessWidget {
   }
 }
 
-Widget getBottomTitles (double value, TitleMeta meta){
+Widget getBottomTitles(double value, TitleMeta meta) {
   const style = TextStyle(
     color: Colors.pink,
     fontWeight: FontWeight.bold,
@@ -95,7 +95,7 @@ Widget getBottomTitles (double value, TitleMeta meta){
       break;
     default:
       text = const Text('', style: style);
-    }
+  }
 
-    return SideTitleWidget(child: text, axisSide: meta.axisSide);
+  return SideTitleWidget(axisSide: meta.axisSide, child: text);
 }

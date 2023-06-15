@@ -23,12 +23,11 @@ class GymItem extends StatelessWidget {
               children: [
                 Text(gym.name, style: const TextStyle(fontSize: 24)),
                 if (gym.distanceKm != null)
-                Column(
-                  children: [
-                  const Icon(Icons.location_on),
-                  const SizedBox(height: 3),
-                  Text("${gym.distanceKm!.toStringAsFixed(1)} km"),
-                ]),
+                  Column(children: [
+                    const Icon(Icons.location_on),
+                    const SizedBox(height: 3),
+                    Text("${gym.distanceKm!.toStringAsFixed(1)} km"),
+                  ]),
               ],
             )),
       ),

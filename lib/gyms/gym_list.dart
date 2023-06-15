@@ -79,7 +79,9 @@ class GymListState extends State<GymList> {
     if (await checkLocationPermission()) {
       Position pos = await Geolocator.getCurrentPosition();
       for (Gym g in gymList) {
-        g.distanceKm = 0.001 * Geolocator.distanceBetween(g.latitude, g.longitude, pos.latitude, pos.longitude);
+        g.distanceKm = 0.001 *
+            Geolocator.distanceBetween(
+                g.latitude, g.longitude, pos.latitude, pos.longitude);
       }
       // Sort the list by distance
       gymList.sort((a, b) => a.distanceKm!.compareTo(b.distanceKm!));
@@ -107,7 +109,8 @@ class GymListState extends State<GymList> {
     if (permission == LocationPermission.denied) {
       // If the permission is still 'denied
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.always && permission != LocationPermission.whileInUse) {
+      if (permission != LocationPermission.always &&
+          permission != LocationPermission.whileInUse) {
         return false;
       }
     }

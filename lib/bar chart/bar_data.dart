@@ -19,7 +19,6 @@ class BarData {
     required this.v5Amount,
     required this.v6Amount,
     required this.v7Amount,
-
   });
 
   List<IndividualBar> barData = [];
@@ -36,5 +35,4 @@ class BarData {
       IndividualBar(x: 7, y: v7Amount),
     ];
   }
-
 }

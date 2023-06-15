@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MainAppBar(barTitle: 'Profile'),
+      appBar: const MainAppBar(barTitle: 'Profile'),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(

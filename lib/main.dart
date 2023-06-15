@@ -84,7 +84,8 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color.lerp(Colors.pink, Colors.orange, _selectedIndex/pages.length),
+        selectedItemColor: Color.lerp(
+            Colors.pink, Colors.orange, _selectedIndex / pages.length),
         onTap: _selectTab,
       ),
     );

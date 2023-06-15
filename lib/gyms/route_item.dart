@@ -35,13 +35,14 @@ class RouteItem extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 5),
-            Wrap(
-              spacing: 8,
-              runSpacing: -5,
-              children: [
-                for (String tag in climbingRoute.tags)
-                  Chip(label: Text(tag, style: const TextStyle(color: Colors.white)), elevation: 2, backgroundColor: climbingRoute.color),
-              ]),
+            Wrap(spacing: 8, runSpacing: -5, children: [
+              for (String tag in climbingRoute.tags)
+                Chip(
+                    label:
+                        Text(tag, style: const TextStyle(color: Colors.white)),
+                    elevation: 2,
+                    backgroundColor: climbingRoute.color),
+            ]),
             const SizedBox(height: 5),
             Text('${climbingRoute.name} - ${climbingRoute.difficulty}'),
           ],

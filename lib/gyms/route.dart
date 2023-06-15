@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/gym_overview.dart';
+import 'package:climb_it/gyms/tags.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:customizable_counter/customizable_counter.dart';
 import 'package:flutter/material.dart';
@@ -51,12 +52,13 @@ class _RoutePageState extends State<RoutePage> {
       body: SingleChildScrollView(
           child: Column(
         children: [
-          Text(widget.route.name),
           CachedNetworkImage(
             imageUrl: widget.route.imageUrl,
             placeholder: (context, url) =>
                 const Center(child: CircularProgressIndicator()),
           ),
+          Text(widget.route.name),
+          Tags(tags: widget.route.tags, color: widget.route.color),
           FutureBuilder(
               future: _initializeVideoPlayerFuture,
               builder: (context, snapshot) {
@@ -93,7 +95,8 @@ class _RoutePageState extends State<RoutePage> {
                 borderRadius: 100,
                 buttonText: 'Click me after an atempt!',
                 showButtonText: true,
-                count: preferences!.getDouble("counter") ?? 0,
+                //TODO Handle null value. Changed ! to ? since value was null
+                count: preferences?.getDouble("counter") ?? 0,
                 step: 1,
                 minCount: 0,
                 incrementIcon: const Icon(

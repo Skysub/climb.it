@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:climb_it/gyms/tags.dart';
 import 'package:flutter/material.dart';
 
 import 'gym_overview.dart';
@@ -35,14 +36,7 @@ class RouteItem extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 5),
-            Wrap(spacing: 8, runSpacing: -5, children: [
-              for (String tag in climbingRoute.tags)
-                Chip(
-                    label:
-                        Text(tag, style: const TextStyle(color: Colors.white)),
-                    elevation: 2,
-                    backgroundColor: climbingRoute.color),
-            ]),
+            Tags(tags: climbingRoute.tags, color: climbingRoute.color),
             const SizedBox(height: 5),
             Text('${climbingRoute.name} - ${climbingRoute.difficulty}'),
           ],

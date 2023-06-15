@@ -70,14 +70,20 @@ class GymListState extends State<GymList> {
   }
 
   Future<List<Gym>> getGymList() async {
-    var data = await FirebaseDatabase.instance.ref().child('gyms').once();
+    //Calling both async functions in parrallel
+    var futures = await Future.wait(
+        [FirebaseDatabase.instance.ref().child('gyms').once(), getUserPos()]);
+
+    //Convincing the compiler that the objects have type
+    DatabaseEvent data = futures[0] as DatabaseEvent;
+    Position? pos = futures[1] as Position?;
+
     var gymList = data.snapshot.children
         .map((e) => Gym.fromJSON(e.value as Map, e.key ?? ''))
         .toList();
 
     // If we have/get location permission, calculate the distance to each gym
-    if (await checkLocationPermission()) {
-      Position pos = await Geolocator.getCurrentPosition();
+    if (pos != null) {
       for (Gym g in gymList) {
         g.distanceKm = 0.001 *
             Geolocator.distanceBetween(
@@ -86,8 +92,14 @@ class GymListState extends State<GymList> {
       // Sort the list by distance
       gymList.sort((a, b) => a.distanceKm!.compareTo(b.distanceKm!));
     }
-
     return gymList;
+  }
+
+  Future<Position?> getUserPos() async {
+    if (await checkLocationPermission()) {
+      return await Geolocator.getCurrentPosition();
+    }
+    return null;
   }
 
   Future<bool> checkLocationPermission() async {

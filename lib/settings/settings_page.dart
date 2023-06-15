@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'icon_widget.dart';
+import 'dark_mode_inherited_widget.dart';
 
 class SettingsPage extends StatefulWidget {
   static const keyDarkMode = 'key-dark-mode';
@@ -12,9 +13,27 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   static const keyPrimaryCenter = 'key-primaryCenter';
+  bool? isDarkMode;
+
+    void toggleDarkMode(bool value) {
+    final inheritedWidget = DarkModeInheritedWidget.of(context);
+    if (inheritedWidget != null) {
+      inheritedWidget.toggleDarkMode(value);
+      setState(() {
+        isDarkMode = value;
+      });
+    }
+  }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+  
+  final inheritedWidget = DarkModeInheritedWidget.of(context);
+    if (inheritedWidget != null) {
+      isDarkMode = inheritedWidget.isDarkMode;
+    }
+
+  return Scaffold(
         body: SafeArea(
           child: ListView(
             padding: const EdgeInsets.all(10),
@@ -25,7 +44,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   const SizedBox(height: 30),
                   buildChoosePrimaryCenter(),
                   const SizedBox(height: 50),
-                  buildDarkmode(),
+                  buildDarkMode(),
                   const SizedBox(height: 50),
                   buildResetData(),
                   const SizedBox(height: 50),
@@ -36,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ),
       );
-
+  }
   Widget buildChoosePrimaryCenter() => DropDownSettingsTile(
         settingKey: keyPrimaryCenter,
         title: 'Choose primary center',
@@ -51,14 +70,20 @@ class _SettingsPageState extends State<SettingsPage> {
         onChange: (primaryCenter) {/*NOOb*/},
       );
 
-  Widget buildDarkmode() => SwitchSettingsTile(
-        settingKey: 'keyDarkMode',
-        leading: const IconWidget(
-            icon: Icons.dark_mode_outlined, color: Colors.pink),
-        title: 'Dark Mode',
-        subtitle: '',
-        onChange: (isDarkMode) {/*NOOB*/},
-      );
+
+    
+ Widget buildDarkMode() {
+    if (isDarkMode == null) {
+      return const SizedBox.shrink(); // Hidden until the value of 'isDarkMode' is changed
+    }
+
+    return SwitchListTile(
+      value: isDarkMode!,
+      onChanged: (value) => toggleDarkMode(value),
+      title: const Text('Dark Mode'),
+      secondary: const Icon(Icons.dark_mode_outlined, color: Colors.pink),
+    );
+  }
 
   Widget buildResetData() => SimpleSettingsTile(
         title: 'Reset Data',

@@ -2,11 +2,13 @@ import 'package:climb_it/main_app_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'gyms/gym_nav.dart';
 import 'profile_page.dart';
 import 'settings/settings_page.dart';
+import 'settings/dark_mode_inherited_widget.dart';
 
 void main() async {
   // Initialize widgets before initializing Firebase
@@ -21,29 +23,60 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  late SharedPreferences _prefs;
+  bool isDarkMode = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDarkMode();
+  }
+
+  Future<void> _loadDarkMode() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isDarkMode = _prefs.getBool('isDarkMode') ?? false;
+    });
+  }
+
+  Future<void> _saveDarkMode(bool value) async {
+    await _prefs.setBool('isDarkMode', value);
+    setState(() {
+      isDarkMode = value;
+    });
+  }
+
+  void toggleDarkMode(bool value) {
+    _saveDarkMode(value);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scrollbarTheme: ScrollbarThemeData(
-          thumbColor: MaterialStateProperty.all(Colors.pink.withOpacity(0.75))
-        )
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        scrollbarTheme: ScrollbarThemeData(
-          thumbColor: MaterialStateProperty.all(Colors.pink.withOpacity(0.75))
+    title: 'Flutter Demo',
+    theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
+    themeMode: ThemeMode.dark,
+    home: DarkModeInheritedWidget(
+      isDarkMode: isDarkMode,
+      toggleDarkMode: toggleDarkMode,
+      child: ScrollbarTheme(
+        data: ScrollbarThemeData(
+          thumbColor: MaterialStateProperty.all(Colors.pink.withOpacity(0.75)),
         ),
+        child: const Home(),
       ),
-      themeMode: ThemeMode.dark,
-      home: const Home(),
-    );
-  }
+    ),
+  );
+}
 }
 
 class Home extends StatefulWidget {

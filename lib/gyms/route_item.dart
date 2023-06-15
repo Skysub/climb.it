@@ -28,7 +28,7 @@ class RouteItem extends StatelessWidget {
                   height: 200,
                   width: double.infinity,
                   fit: BoxFit.cover,
-                  alignment: Alignment.topCenter,
+                  alignment: Alignment.center,
                   placeholder: (context, url) =>
                       const Center(child: CircularProgressIndicator()),
                 ),

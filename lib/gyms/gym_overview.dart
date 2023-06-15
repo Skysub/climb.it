@@ -30,13 +30,24 @@ class ClimbingRoute {
         color: getColor(json['color']));
   }
 
-  //TODO Handle more colors
+  //TODO Decice which colors to use. Yellow is too bright
   static Color getColor(String? json) {
     switch (json) {
-      case 'red':
-        return Colors.red;
       case 'green':
         return Colors.green;
+      case 'yellow':
+        return Colors.yellow;
+      case 'orange':
+        return Colors.orange;
+      case 'blue':
+        return Colors.blue;
+      case 'purple':
+        return Colors.purple;
+      case 'red':
+        return Colors.red;
+      case 'black':
+        return Colors.black;
+      case 'pink':
       default:
         return Colors.pink;
     }

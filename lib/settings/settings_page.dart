@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'icon_widget.dart';
 import 'dark_mode_inherited_widget.dart';
+import '../gyms/gym.dart';
 
 class SettingsPage extends StatefulWidget {
   static const keyDarkMode = 'key-dark-mode';
@@ -17,16 +19,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   static const keyPrimaryCenter = 'key-primaryCenter';
   bool? isDarkMode;
-
-  void toggleDarkMode(bool value) {
-    final inheritedWidget = DarkModeInheritedWidget.of(context);
-    if (inheritedWidget != null) {
-      inheritedWidget.toggleDarkMode(value);
-      setState(() {
-        isDarkMode = value;
-      });
-    }
-  }
+  List<Gym> gymList = []; //List to save gyms from firebase
 
   @override
   Widget build(BuildContext context) {
@@ -85,6 +78,16 @@ class _SettingsPageState extends State<SettingsPage> {
       secondary:
           const IconWidget(icon: Icons.dark_mode_outlined, color: Colors.pink),
     );
+  }
+
+  void toggleDarkMode(bool value) {
+    final inheritedWidget = DarkModeInheritedWidget.of(context);
+    if (inheritedWidget != null) {
+      inheritedWidget.toggleDarkMode(value);
+      setState(() {
+        isDarkMode = value;
+      });
+    }
   }
 
   Widget buildResetData() => SimpleSettingsTile(

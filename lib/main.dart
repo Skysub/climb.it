@@ -116,6 +116,9 @@ class _HomeState extends State<Home> {
       if (_selectedIndex == index) {
         gymNavigatorKey.currentState?.popUntil((route) => route.isFirst);
       }
+      if (index == 1) {
+        pages[1] = ProfilePage();
+      }
       _selectedIndex = index;
     });
   }

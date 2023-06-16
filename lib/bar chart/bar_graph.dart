@@ -1,9 +1,11 @@
+import 'dart:math';
+
 import 'package:climb_it/bar%20chart/bar_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class MyBarGraph extends StatelessWidget {
-  final List vAmmount;
+  final List<double> vAmmount;
   const MyBarGraph({
     super.key,
     required this.vAmmount,
@@ -25,7 +27,7 @@ class MyBarGraph extends StatelessWidget {
 
     return BarChart(
       BarChartData(
-        maxY: 20,
+        maxY: vAmmount.reduce(max),
         minY: 0,
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(show: false),

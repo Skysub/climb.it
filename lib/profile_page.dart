@@ -3,6 +3,7 @@ import 'package:climb_it/bar%20chart/bar_graph.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({super.key});
@@ -14,19 +15,27 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String name = 'Profile Name';
 
-void setName(String name) {
-  this.name = name;
-}
+  void setName(String name) {
+    this.name = name;
+  }
+
+  Future<List<double>> loadAmounts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    for (int i = 0; i < 8; i++) {
+      vAmounts[i] = prefs.getInt('V$i')?.toDouble() ?? 0;
+    }
+    return vAmounts;
+  }
 
   final List<double> vAmounts = [
-    14.0,
-    11.0,
-    8.0,
-    6.0,
-    9.0,
-    10.0,
-    6.0,
-    7.0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
   ];
 
   final List<String> centers = ['Center1', 'Center2', 'Center3'];
@@ -48,12 +57,12 @@ void setName(String name) {
               Stack(
                 children: [
                   SizedBox(
-                      width: 150,
-                      height: 150,
-                      child: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: profileImage),
-                      ),
+                    width: 150,
+                    height: 150,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: profileImage),
+                  ),
                   Positioned(
                     bottom: 30,
                     right: 0,
@@ -67,27 +76,26 @@ void setName(String name) {
                       child: IconButton(
                         onPressed: () {
                           showDialog(
-                            context: context, 
-                            builder: (context) =>  SimpleDialog(
+                            context: context,
+                            builder: (context) => SimpleDialog(
                               title: const Center(
-                                child: Text('Change Profile Picture')),
+                                  child: Text('Change Profile Picture')),
                               children: [
-                                const Center(
-                                  child: Text('Select Option')),
+                                const Center(child: Text('Select Option')),
                                 TextButton(
                                   onPressed: () {
                                     getFromGallery();
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Select from gallery'),
-                                  ),
+                                ),
                                 TextButton(
                                   onPressed: () {
                                     getFromCamera();
                                     Navigator.pop(context);
                                   },
                                   child: const Text('Take from camera'),
-                                  ),
+                                ),
                               ],
                             ),
                           );
@@ -110,16 +118,17 @@ void setName(String name) {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
                       child: Text(
-                        name, 
+                        name,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
-                      ),),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 10),
                     InkWell(
                       onTap: () {
-                      _showChangeNameDialog();
+                        _showChangeNameDialog();
                       },
                       child: Container(
                           width: 20,
@@ -139,38 +148,49 @@ void setName(String name) {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.orange,
-                  border: Border.all(
                     color: Colors.orange,
-                    width: 5,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [ 
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 4,
-                    )
-                  ]
-                ),
+                    border: Border.all(
+                      color: Colors.orange,
+                      width: 5,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black,
+                        blurRadius: 4,
+                      )
+                    ]),
                 child: Center(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      child: Column(
-                        children: [
-                          const Text('Routes:',
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Routes:',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          ),),
-                          SizedBox(
-                            height: 200,
-                            child: MyBarGraph(vAmmount: vAmounts,
-                            ),
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          height: 200,
+                          child: FutureBuilder(
+                              future: loadAmounts(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return MyBarGraph(
+                                    vAmmount: vAmounts,
+                                  );
+                                } else {
+                                  return const CircularProgressIndicator();
+                                }
+                              }),
+                        ),
+                      ],
                     ),
                   ),
+                ),
               ),
               const SizedBox(height: 20),
               Container(
@@ -182,10 +202,12 @@ void setName(String name) {
                     width: 5,
                   ),
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 4,
-                  ),],
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 4,
+                    ),
+                  ],
                 ),
                 child: Center(
                   child: Column(
@@ -193,11 +215,13 @@ void setName(String name) {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Column(children: [
-                        const Text('Most Visited Centres:', 
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),),
+                        const Text(
+                          'Most Visited Centres:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         const SizedBox(height: 10),
                         for (var center in centers) Text(center)
                       ]),
@@ -215,10 +239,12 @@ void setName(String name) {
                     width: 5,
                   ),
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 4,
-                  ),],
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black,
+                      blurRadius: 4,
+                    ),
+                  ],
                 ),
                 child: Center(
                   child: Column(
@@ -227,11 +253,13 @@ void setName(String name) {
                     children: [
                       Column(
                         children: [
-                          const Text('Recently Visited Centres:',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),),
+                          const Text(
+                            'Recently Visited Centres:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           const SizedBox(height: 10),
                           for (var center in centers.reversed) Text(center)
                         ],
@@ -247,7 +275,6 @@ void setName(String name) {
     );
   }
 
-  
   void _showChangeNameDialog() async {
     String newName = await showDialog(
       context: context,
@@ -286,6 +313,7 @@ void setName(String name) {
       profileImage = Image.file(File(img!.path));
     });
   }
+
   getFromCamera() async {
     var img = await image.pickImage(source: ImageSource.camera);
     setState(() {
@@ -293,7 +321,3 @@ void setName(String name) {
     });
   }
 }
-
-
-  
-

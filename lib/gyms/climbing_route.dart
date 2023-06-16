@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'gym_overview.dart';
+import 'hint.dart';
 
 class ClimbingRoute {
   final String id;

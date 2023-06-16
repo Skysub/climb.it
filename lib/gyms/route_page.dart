@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:climb_it/gyms/gym_overview.dart';
 import 'package:climb_it/gyms/tags.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,7 @@ import 'package:video_player/video_player.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
 import 'climbing_route.dart';
+import 'hint.dart';
 
 typedef CompletedCallback = void Function(ClimbingRoute, bool);
 
@@ -148,5 +148,3 @@ class _RoutePageState extends State<RoutePage> {
     }
   }
 }
-
-enum HintType { image, text, video }

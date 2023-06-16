@@ -11,22 +11,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'climbing_route.dart';
 import 'gym.dart';
 
-class Hint {
-  final String name;
-  final String data;
-  final HintType type;
-
-  Hint({required this.name, required this.data, required this.type});
-
-  static Hint fromJSON(Map<dynamic, dynamic> json) {
-    return Hint(
-      name: json['name'] ?? 'Hint',
-      data: json['data'],
-      type: HintType.values.byName(json['type']),
-    );
-  }
-}
-
 class GymOverview extends StatefulWidget {
   final Gym gym;
   const GymOverview({super.key, required this.gym});

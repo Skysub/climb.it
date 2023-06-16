@@ -86,33 +86,64 @@ class _RoutePageState extends State<RoutePage> {
             },
           ),
           const SizedBox(height: 5),
-          Row(
-            children: [
-              CustomizableCounter(
-                borderColor: Colors.redAccent,
-                backgroundColor: Colors.redAccent,
-                borderWidth: 5,
-                borderRadius: 100,
-                buttonText: 'Click me after an atempt!',
-                showButtonText: true,
-                //TODO Handle null value. Changed ! to ? since value was null
-                count: preferences?.getDouble("counter") ?? 0,
-                step: 1,
-                minCount: 0,
-                incrementIcon: const Icon(
-                  Icons.add,
-                  color: Colors.orange,
-                ),
-                decrementIcon: const Icon(
-                  Icons.remove,
-                  color: Colors.orange,
-                ),
-                onIncrement: (e) => attemptCounter = e,
-              )
-            ],
-          )
+          Row(children: [
+            CustomizableCounter(
+              borderColor: Colors.redAccent,
+              backgroundColor: Colors.redAccent,
+              borderWidth: 5,
+              borderRadius: 100,
+              buttonText: 'Click me after an atempt!',
+              showButtonText: true,
+              //TODO Handle null value. Changed ! to ? since value was null
+              count: preferences?.getDouble("counter") ?? 0,
+              step: 1,
+              minCount: 0,
+              incrementIcon: const Icon(
+                Icons.add,
+                color: Colors.orange,
+              ),
+              decrementIcon: const Icon(
+                Icons.remove,
+                color: Colors.orange,
+              ),
+              onIncrement: (e) => attemptCounter = e,
+            ),
+            Expanded(
+                child: OutlinedButton(
+                    child: Text("Hint"),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      side: BorderSide(
+                        color: Colors.red,
+                      ),
+                    ),
+                    onPressed: () => {showHint(HintType.text, "Bruh")}))
+          ])
         ],
       )),
     );
   }
+
+  showHint(HintType ht, String data) async {
+    switch (ht) {
+      case HintType.text:
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                    title: const Text('Hint'),
+                    content: Text(data),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ]));
+        break;
+      case HintType.image:
+        break;
+      default:
+    }
+  }
 }
+
+enum HintType { image, text }

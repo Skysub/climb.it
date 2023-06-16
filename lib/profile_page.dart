@@ -172,8 +172,9 @@ void setName(String name) {
                     ),
                   ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
               Container(
+                width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.pink,
                   border: Border.all(
@@ -186,33 +187,59 @@ void setName(String name) {
                     blurRadius: 4,
                   ),],
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(children: [
-                      const Text('Most Visited Centres:', 
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),),
-                      const SizedBox(height: 10),
-                      for (var center in centers) Text(center)
-                    ]),
-                    Column(
-                      children: [
-                        const Text('Recently Visited Centres:',
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(children: [
+                        const Text('Most Visited Centres:', 
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),),
                         const SizedBox(height: 10),
-                        for (var center in centers.reversed) Text(center)
-                      ],
-                    )
-                  ],
+                        for (var center in centers) Text(center)
+                      ]),
+                    ],
+                  ),
                 ),
-              )
+              ),
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.pink,
+                  border: Border.all(
+                    color: Colors.pink,
+                    width: 5,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: const [BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 4,
+                  ),],
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          const Text('Recently Visited Centres:',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                          const SizedBox(height: 10),
+                          for (var center in centers.reversed) Text(center)
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

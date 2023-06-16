@@ -6,6 +6,7 @@ import 'package:customizable_counter/customizable_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key, required this.route});
@@ -20,18 +21,19 @@ class _RoutePageState extends State<RoutePage> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
   double attemptCounter = 0;
-  SharedPreferences? preferences;
+  bool routeCompleted = false;
+  late SharedPreferences preferences;
 
-  Future<void> initStorage() async {
-    preferences = await SharedPreferences.getInstance();
-    // init 1st time 0
-    int? savedData = preferences?.getInt("counter");
-    if (savedData == null) {
-      await preferences!.setDouble("Attempts", attemptCounter);
-    } else {
-      attemptCounter = savedData as double;
-    }
-    setState(() {});
+  _saveRouteData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("routedCompleted", routeCompleted);
+  }
+
+  _loadRouteData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      routeCompleted = prefs.getBool("routeCompleted")!;
+    });
   }
 
   @override
@@ -42,7 +44,6 @@ class _RoutePageState extends State<RoutePage> {
     _controller.setLooping(true);
     _controller.setVolume(1.0);
     super.initState();
-    initStorage();
   }
 
   @override
@@ -86,39 +87,37 @@ class _RoutePageState extends State<RoutePage> {
             },
           ),
           const SizedBox(height: 5),
-          Row(children: [
-            CustomizableCounter(
-              borderColor: Colors.redAccent,
-              backgroundColor: Colors.redAccent,
-              borderWidth: 5,
-              borderRadius: 100,
-              buttonText: 'Click me after an atempt!',
-              showButtonText: true,
-              //TODO Handle null value. Changed ! to ? since value was null
-              count: preferences?.getDouble("counter") ?? 0,
-              step: 1,
-              minCount: 0,
-              incrementIcon: const Icon(
-                Icons.add,
-                color: Colors.orange,
+          Row(
+            children: [
+              FlutterSwitch(
+                width: 160,
+                inactiveText: "Not Completed",
+                activeText: "Completed!",
+                padding: 8,
+                inactiveColor: Colors.pink,
+                activeColor: Colors.orange,
+                toggleColor: Colors.black,
+                value: routeCompleted,
+                showOnOff: true,
+                onToggle: (val) {
+                  setState(() {
+                    routeCompleted = val;
+                    _saveRouteData();
+                  });
+                },
               ),
-              decrementIcon: const Icon(
-                Icons.remove,
-                color: Colors.orange,
-              ),
-              onIncrement: (e) => attemptCounter = e,
-            ),
-            Expanded(
-                child: OutlinedButton(
-                    child: Text("Hint"),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
-                      side: BorderSide(
-                        color: Colors.red,
+              Expanded(
+                  child: OutlinedButton(
+                      child: Text("Hint"),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: BorderSide(
+                          color: Colors.red,
+                        ),
                       ),
-                    ),
-                    onPressed: () => {showHint(HintType.text, "Bruh")}))
-          ])
+                      onPressed: () => {showHint(HintType.text, "Bruh")}))
+            ],
+          ),
         ],
       )),
     );

@@ -56,15 +56,14 @@ enum CompletionSortMode {
 
 class GymOverviewState extends State<GymOverview> {
   late Future<List<ClimbingRoute>> routeFuture;
+  List<ClimbingRoute> displayedRoutes = [];
   List<ClimbingRoute> routes = [];
-  late List<ClimbingRoute> displayedRoutes;
 
   RouteSortMode sortMode = RouteSortMode.grade;
   CompletionSortMode completeMode = CompletionSortMode.any;
   bool sortDescending = false;
 
   Set<String> tagFilters = {};
-
   Map<String, dynamic> completedMap = {};
 
   @override

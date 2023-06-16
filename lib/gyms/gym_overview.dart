@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:climb_it/gyms/route.dart';
 import 'package:climb_it/gyms/route_item.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'gym.dart';
 
@@ -13,6 +16,7 @@ class ClimbingRoute {
   final String imageUrl;
   final List<String> tags;
   final Color color;
+  bool isCompleted;
 
   ClimbingRoute(
       {required this.id,
@@ -20,18 +24,19 @@ class ClimbingRoute {
       required this.difficulty,
       required this.imageUrl,
       required this.tags,
-      required this.color});
+      required this.color,
+      required this.isCompleted});
 
   static ClimbingRoute fromJSON(Map<dynamic, dynamic> json, String id) {
     return ClimbingRoute(
-      id: id,
-      name: json['name'],
-      difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '',
-      imageUrl: json['img_url'] ??
-          'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
-      tags: json['tags'] != null ? json['tags'].split(';') : [],
-      color: getColor(json['color']),
-    );
+        id: id,
+        name: json['name'],
+        difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '',
+        imageUrl: json['img_url'] ??
+            'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
+        tags: json['tags'] != null ? json['tags'].split(';') : [],
+        color: getColor(json['color']),
+        isCompleted: false);
   }
 
   //TODO Decice which colors to use. Yellow is too bright
@@ -70,13 +75,15 @@ enum RouteSortMode { grade, name }
 
 class GymOverviewState extends State<GymOverview> {
   late Future<List<ClimbingRoute>> routeFuture;
-  late List<ClimbingRoute> routes;
+  List<ClimbingRoute> routes = [];
   late List<ClimbingRoute> displayedRoutes;
 
   RouteSortMode sortMode = RouteSortMode.grade;
   bool sortDescending = false;
 
   Set<String> tagFilters = {};
+
+  Map<String, dynamic> completedMap = {};
 
   @override
   void initState() {
@@ -198,8 +205,11 @@ class GymOverviewState extends State<GymOverview> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) => RoutePage(
-                                                    route: displayedRoutes[
-                                                        index])))
+                                                      route: displayedRoutes[
+                                                          index],
+                                                      callback:
+                                                          changeCompletedStatus,
+                                                    )))
                                       },
                                       child: RouteItem(
                                           climbingRoute:
@@ -226,15 +236,49 @@ class GymOverviewState extends State<GymOverview> {
   }
 
   Future<List<ClimbingRoute>> getRouteData() async {
+    // Load Firebase data
     var data = await FirebaseDatabase.instance
         .ref()
         .child('routes')
         .child(widget.gym.key)
         .once();
-    return data.snapshot.children
+    routes = data.snapshot.children
         .map((e) => ClimbingRoute.fromJSON(e.value as Map, e.key ?? ''))
         .toList();
+
+    // Load completed routes map from shared_preferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? completedString = prefs.getString('routesCompleted');
+    completedMap = completedString != null ? jsonDecode(completedString) : {};
+    setCompletedStatus();
+
+    return routes;
   }
+
+  changeCompletedStatus(String routeKey, bool isCompleted) {
+    setState(() {
+      if (!isCompleted) {
+        completedMap.remove(routeKey);
+      } else {
+        completedMap[routeKey] = isCompleted;
+      }
+      setCompletedStatus();
+      saveRouteData();
+    });
+  }
+
+  void setCompletedStatus() {
+    for (ClimbingRoute route in routes) {
+      route.isCompleted = completedMap[route.id] ?? false;
+    }
+  }
+
+  saveRouteData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("routesCompleted", jsonEncode(completedMap));
+  }
+
+  void updateRouteCompleted() {}
 
   void changeSorting(RouteSortMode clickedMode) {
     setState(() {

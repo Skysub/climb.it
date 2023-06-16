@@ -1,18 +1,18 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/gym_overview.dart';
 import 'package:climb_it/gyms/tags.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
+typedef CompletedCallback = void Function(String, bool);
+
 class RoutePage extends StatefulWidget {
-  const RoutePage({super.key, required this.route});
+  const RoutePage({super.key, required this.route, required this.callback});
 
   final ClimbingRoute route;
+  final CompletedCallback callback;
 
   @override
   State<RoutePage> createState() => _RoutePageState();
@@ -23,21 +23,6 @@ class _RoutePageState extends State<RoutePage> {
   late Future<void> _initializeVideoPlayerFuture;
   double attemptCounter = 0;
 
-  Map<String, dynamic> completedMap = {};
-
-  _saveRouteData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("routesCompleted", jsonEncode(completedMap));
-  }
-
-  _loadRouteData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      String? completedString = prefs.getString('routesCompleted');
-      completedMap = completedString != null ? jsonDecode(completedString) : {};
-    });
-  }
-
   @override
   void initState() {
     _controller = VideoPlayerController.network(
@@ -46,7 +31,6 @@ class _RoutePageState extends State<RoutePage> {
     _controller.setLooping(true);
     _controller.setVolume(1.0);
     super.initState();
-    _loadRouteData();
   }
 
   @override
@@ -103,12 +87,12 @@ class _RoutePageState extends State<RoutePage> {
                     inactiveColor: Colors.pink,
                     activeColor: Colors.orange,
                     toggleColor: Colors.black,
-                    value: completedMap[widget.route.name] ?? false,
+                    value: widget.route.isCompleted,
                     showOnOff: true,
                     onToggle: (val) {
                       setState(() {
-                        completedMap[widget.route.name] = val;
-                        _saveRouteData();
+                        widget.route.isCompleted = val;
+                        widget.callback(widget.route.id, val);
                       });
                     },
                   )),

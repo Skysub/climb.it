@@ -97,12 +97,45 @@ class GymOverview extends StatefulWidget {
 
 enum RouteSortMode { grade, name }
 
+enum CompletionSortMode {
+  any,
+  completed,
+  notCompleted;
+
+  String toString() {
+    switch (this) {
+      case CompletionSortMode.any:
+        return 'Any';
+      case CompletionSortMode.completed:
+        return 'Completed';
+      case CompletionSortMode.notCompleted:
+        return 'Not Completed';
+    }
+  }
+
+  bool highlighted() {
+    return this != CompletionSortMode.any;
+  }
+
+  CompletionSortMode next() {
+    switch (this) {
+      case CompletionSortMode.any:
+        return CompletionSortMode.completed;
+      case CompletionSortMode.completed:
+        return CompletionSortMode.notCompleted;
+      case CompletionSortMode.notCompleted:
+        return CompletionSortMode.any;
+    }
+  }
+}
+
 class GymOverviewState extends State<GymOverview> {
   late Future<List<ClimbingRoute>> routeFuture;
   List<ClimbingRoute> routes = [];
   late List<ClimbingRoute> displayedRoutes;
 
   RouteSortMode sortMode = RouteSortMode.grade;
+  CompletionSortMode completeMode = CompletionSortMode.any;
   bool sortDescending = false;
 
   Set<String> tagFilters = {};
@@ -143,75 +176,95 @@ class GymOverviewState extends State<GymOverview> {
                 Expanded(
                     child: Align(
                         alignment: Alignment.centerRight,
-                        child: ActionChip(
-                            label: const Text('Tags'),
-                            backgroundColor:
-                                tagFilters.isEmpty ? null : Colors.pink,
-                            //TODO Extract Dialog to separate Widget
-                            onPressed: () => showDialog(
-                                    context: context,
-                                    builder: (context) => StatefulBuilder(
-                                          builder: (context, setState) =>
-                                              Dialog(
-                                                  child: Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Wrap(
-                                                  spacing: 5,
-                                                  children: [
-                                                    for (String tag
-                                                        in getAllTags())
-                                                      FilterChip(
-                                                          elevation: 3,
-                                                          checkmarkColor:
-                                                              Colors.white,
-                                                          selectedColor:
-                                                              Colors.pink,
-                                                          label: Text(tag,
-                                                              style: TextStyle(
-                                                                  color: tagFilters
-                                                                          .contains(
-                                                                              tag)
-                                                                      ? Colors
-                                                                          .white
-                                                                      : null)),
-                                                          selected: tagFilters
-                                                              .contains(tag),
-                                                          onSelected:
-                                                              (selected) {
-                                                            setState(() {
-                                                              if (selected) {
-                                                                tagFilters
-                                                                    .add(tag);
-                                                              } else {
-                                                                tagFilters
-                                                                    .remove(
-                                                                        tag);
-                                                              }
-                                                            });
-                                                          })
-                                                  ],
-                                                ),
-                                                TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                    child: const Text('Close',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.pink)))
-                                              ],
-                                            ),
-                                          )),
-                                        )).then((value) {
-                                  setState(() {
-                                    sortRoutes();
-                                  });
-                                }))))
+                        child: Wrap(spacing: 10, children: [
+                          ActionChip(
+                              label: Text(completeMode.toString(),
+                                  style: TextStyle(
+                                      color: completeMode.highlighted()
+                                          ? Colors.white
+                                          : null)),
+                              backgroundColor: completeMode.highlighted()
+                                  ? Colors.pink
+                                  : null,
+                              onPressed: () {
+                                setState(() {
+                                  completeMode = completeMode.next();
+                                  sortRoutes();
+                                });
+                              }),
+                          ActionChip(
+                              label: Text('Tags',
+                                  style: TextStyle(
+                                      color: tagFilters.isNotEmpty
+                                          ? Colors.white
+                                          : null)),
+                              backgroundColor:
+                                  tagFilters.isEmpty ? null : Colors.pink,
+                              //TODO Extract Dialog to separate Widget
+                              onPressed: () => showDialog(
+                                      context: context,
+                                      builder: (context) => StatefulBuilder(
+                                            builder: (context, setState) =>
+                                                Dialog(
+                                                    child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Wrap(
+                                                    spacing: 5,
+                                                    children: [
+                                                      for (String tag
+                                                          in getAllTags())
+                                                        FilterChip(
+                                                            elevation: 3,
+                                                            checkmarkColor:
+                                                                Colors.white,
+                                                            selectedColor:
+                                                                Colors.pink,
+                                                            label: Text(tag,
+                                                                style: TextStyle(
+                                                                    color: tagFilters.contains(
+                                                                            tag)
+                                                                        ? Colors
+                                                                            .white
+                                                                        : null)),
+                                                            selected: tagFilters
+                                                                .contains(tag),
+                                                            onSelected:
+                                                                (selected) {
+                                                              setState(() {
+                                                                if (selected) {
+                                                                  tagFilters
+                                                                      .add(tag);
+                                                                } else {
+                                                                  tagFilters
+                                                                      .remove(
+                                                                          tag);
+                                                                }
+                                                              });
+                                                            })
+                                                    ],
+                                                  ),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: const Text('Close',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.pink)))
+                                                ],
+                                              ),
+                                            )),
+                                          )).then((value) {
+                                    setState(() {
+                                      sortRoutes();
+                                    });
+                                  })),
+                        ])))
               ]),
               const SizedBox(height: 10),
               Flexible(
@@ -332,23 +385,37 @@ class GymOverviewState extends State<GymOverview> {
   }
 
   void sortRoutes() {
-    switch (sortMode) {
-      case RouteSortMode.grade:
-        routes.sort((a, b) => a.difficulty.compareTo(b.difficulty));
-        break;
-      case RouteSortMode.name:
-        routes.sort((a, b) => a.name.compareTo(b.name));
-        break;
+    // Save all routes in displayedRoutes
+    displayedRoutes = routes;
+
+    // Filter routes by completed
+    if (completeMode != CompletionSortMode.any) {
+      bool onlyCompleted = completeMode == CompletionSortMode.completed;
+      displayedRoutes = displayedRoutes
+          .where((route) => route.isCompleted == onlyCompleted)
+          .toList();
     }
-    if (sortDescending) {
-      routes = routes.reversed.toList();
-    }
+
+    // Filter by tags
     if (tagFilters.isNotEmpty) {
-      displayedRoutes = routes
+      displayedRoutes = displayedRoutes
           .where((route) => route.tags.any((tag) => tagFilters.contains(tag)))
           .toList();
-    } else {
-      displayedRoutes = routes;
+    }
+
+    // Sort remaining routes
+    switch (sortMode) {
+      case RouteSortMode.grade:
+        displayedRoutes.sort((a, b) => a.difficulty.compareTo(b.difficulty));
+        break;
+      case RouteSortMode.name:
+        displayedRoutes.sort((a, b) => a.name.compareTo(b.name));
+        break;
+    }
+
+    // Set sort order
+    if (sortDescending) {
+      displayedRoutes = displayedRoutes.reversed.toList();
     }
   }
 

@@ -20,6 +20,7 @@ dependencies:
   customizable_counter: ^1.0.4 #Might not be needed 
   shared_preferences: ^2.1.2
   flutter_switch: ^0.3.2
+  image_picker: ^0.8.9
 
 
 dev_dependencies:

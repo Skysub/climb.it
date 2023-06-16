@@ -3,14 +3,16 @@ import 'package:climb_it/gyms/gym_overview.dart';
 import 'package:climb_it/gyms/tags.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
+typedef CompletedCallback = void Function(String, bool);
+
 class RoutePage extends StatefulWidget {
-  const RoutePage({super.key, required this.route});
+  const RoutePage({super.key, required this.route, required this.callback});
 
   final ClimbingRoute route;
+  final CompletedCallback callback;
 
   @override
   State<RoutePage> createState() => _RoutePageState();
@@ -20,20 +22,6 @@ class _RoutePageState extends State<RoutePage> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
   double attemptCounter = 0;
-  bool routeCompleted = false;
-  late SharedPreferences preferences;
-
-  _saveRouteData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("routedCompleted", routeCompleted);
-  }
-
-  _loadRouteData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      routeCompleted = prefs.getBool("routeCompleted")!;
-    });
-  }
 
   @override
   void initState() {
@@ -99,12 +87,12 @@ class _RoutePageState extends State<RoutePage> {
                     inactiveColor: Colors.pink,
                     activeColor: Colors.orange,
                     toggleColor: Colors.black,
-                    value: routeCompleted,
+                    value: widget.route.isCompleted,
                     showOnOff: true,
                     onToggle: (val) {
                       setState(() {
-                        routeCompleted = val;
-                        _saveRouteData();
+                        widget.route.isCompleted = val;
+                        widget.callback(widget.route.id, val);
                       });
                     },
                   )),

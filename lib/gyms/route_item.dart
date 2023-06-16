@@ -36,7 +36,7 @@ class RouteItem extends StatelessWidget {
             const SizedBox(height: 5),
             Tags(tags: climbingRoute.tags, color: climbingRoute.color),
             const SizedBox(height: 5),
-            Text('${climbingRoute.name} - ${climbingRoute.difficulty}'),
+            Text('${climbingRoute.name} - ${climbingRoute.difficulty} - ${climbingRoute.isCompleted ? 'Yes' : 'No'}'),
           ],
         ),
       ),

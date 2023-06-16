@@ -7,6 +7,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'gym.dart';
 
 class ClimbingRoute {
+  final String id;
   final String name;
   final String difficulty;
   final String imageUrl;
@@ -14,20 +15,23 @@ class ClimbingRoute {
   final Color color;
 
   ClimbingRoute(
-      {required this.name,
+      {required this.id,
+      required this.name,
       required this.difficulty,
       required this.imageUrl,
       required this.tags,
       required this.color});
 
-  static ClimbingRoute fromJSON(Map<dynamic, dynamic> json) {
+  static ClimbingRoute fromJSON(Map<dynamic, dynamic> json, String id) {
     return ClimbingRoute(
-        name: json['name'],
-        difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '',
-        imageUrl: json['img_url'] ??
-            'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
-        tags: json['tags'] != null ? json['tags'].split(';') : [],
-        color: getColor(json['color']));
+      id: id,
+      name: json['name'],
+      difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '',
+      imageUrl: json['img_url'] ??
+          'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
+      tags: json['tags'] != null ? json['tags'].split(';') : [],
+      color: getColor(json['color']),
+    );
   }
 
   //TODO Decice which colors to use. Yellow is too bright
@@ -228,7 +232,7 @@ class GymOverviewState extends State<GymOverview> {
         .child(widget.gym.key)
         .once();
     return data.snapshot.children
-        .map((e) => ClimbingRoute.fromJSON(e.value as Map))
+        .map((e) => ClimbingRoute.fromJSON(e.value as Map, e.key ?? ''))
         .toList();
   }
 

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/gym_overview.dart';
 import 'package:climb_it/gyms/tags.dart';
@@ -20,18 +22,19 @@ class _RoutePageState extends State<RoutePage> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
   double attemptCounter = 0;
-  bool routeCompleted = false;
-  late SharedPreferences preferences;
+
+  Map<String, dynamic> completedMap = {};
 
   _saveRouteData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool("routedCompleted", routeCompleted);
+    await prefs.setString("routesCompleted", jsonEncode(completedMap));
   }
 
   _loadRouteData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      routeCompleted = prefs.getBool("routeCompleted")!;
+      String? completedString = prefs.getString('routesCompleted');
+      completedMap = completedString != null ? jsonDecode(completedString) : {};
     });
   }
 
@@ -43,6 +46,7 @@ class _RoutePageState extends State<RoutePage> {
     _controller.setLooping(true);
     _controller.setVolume(1.0);
     super.initState();
+    _loadRouteData();
   }
 
   @override
@@ -99,11 +103,11 @@ class _RoutePageState extends State<RoutePage> {
                     inactiveColor: Colors.pink,
                     activeColor: Colors.orange,
                     toggleColor: Colors.black,
-                    value: routeCompleted,
+                    value: completedMap[widget.route.name] ?? false,
                     showOnOff: true,
                     onToggle: (val) {
                       setState(() {
-                        routeCompleted = val;
+                        completedMap[widget.route.name] = val;
                         _saveRouteData();
                       });
                     },

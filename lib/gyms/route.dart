@@ -87,37 +87,43 @@ class _RoutePageState extends State<RoutePage> {
             },
           ),
           const SizedBox(height: 5),
-          Row(
-            children: [
-              FlutterSwitch(
-                width: 160,
-                inactiveText: "Not Completed",
-                activeText: "Completed!",
-                padding: 8,
-                inactiveColor: Colors.pink,
-                activeColor: Colors.orange,
-                toggleColor: Colors.black,
-                value: routeCompleted,
-                showOnOff: true,
-                onToggle: (val) {
-                  setState(() {
-                    routeCompleted = val;
-                    _saveRouteData();
-                  });
-                },
-              ),
-              Expanded(
-                  child: OutlinedButton(
-                      child: Text("Hint"),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        side: BorderSide(
-                          color: Colors.red,
-                        ),
-                      ),
-                      onPressed: () => {showHint(HintType.text, "Bruh")}))
-            ],
-          ),
+          Padding(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: FlutterSwitch(
+                    width: 160,
+                    inactiveText: "Not Completed",
+                    activeText: "Completed!",
+                    padding: 8,
+                    inactiveColor: Colors.pink,
+                    activeColor: Colors.orange,
+                    toggleColor: Colors.black,
+                    value: routeCompleted,
+                    showOnOff: true,
+                    onToggle: (val) {
+                      setState(() {
+                        routeCompleted = val;
+                        _saveRouteData();
+                      });
+                    },
+                  )),
+                  SizedBox(
+                    width: 30,
+                  ),
+                  Expanded(
+                      child: OutlinedButton(
+                          child: Text("Hint"),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                            side: BorderSide(
+                              color: Colors.red,
+                            ),
+                          ),
+                          onPressed: () => {showHint(HintType.text, "Bruh")}))
+                ],
+              )),
         ],
       )),
     );

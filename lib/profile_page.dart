@@ -31,7 +31,7 @@ void setName(String name) {
 
   final List<String> centers = ['Center1', 'Center2', 'Center3'];
 
-  File? profileImage;
+  Image? profileImage = Image.asset('assets/defaultprofile.png');
   ImagePicker image = ImagePicker();
 
   @override
@@ -51,7 +51,7 @@ void setName(String name) {
                       height: 150,
                       child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                            child: Image.asset('assets/brix.jpg')),
+                            child: profileImage),
                       ),
                   Positioned(
                     bottom: 30,
@@ -68,7 +68,8 @@ void setName(String name) {
                           showDialog(
                             context: context, 
                             builder: (context) =>  SimpleDialog(
-                              title: const Text('Change Profile Picture'),
+                              title: const Center(
+                                child: Text('Change Profile Picture')),
                               children: [
                                 const Center(
                                   child: Text('Select Option')),
@@ -76,13 +77,13 @@ void setName(String name) {
                                   onPressed: () {
                                     getFromGallery();
                                     Navigator.pop(context);
-                                  }, 
+                                  },
                                   child: const Text('Select from gallery'),
                                   ),
                                 TextButton(
                                   onPressed: () {
-                                  getFromCamera();
-                                  Navigator.pop(context);
+                                    getFromCamera();
+                                    Navigator.pop(context);
                                   },
                                   child: const Text('Take from camera'),
                                   ),
@@ -252,15 +253,15 @@ void setName(String name) {
   }
 
   getFromGallery() async {
-    var img = await image.getImage(source: ImageSource.gallery);
+    var img = await image.pickImage(source: ImageSource.gallery);
     setState(() {
-      profileImage = File(img!.path);
+      profileImage = Image.file(File(img!.path));
     });
   }
   getFromCamera() async {
-    var img = await image.getImage(source: ImageSource.camera);
+    var img = await image.pickImage(source: ImageSource.camera);
     setState(() {
-      profileImage = File(img!.path);
+      profileImage = Image.file(File(img!.path));
     });
   }
 }

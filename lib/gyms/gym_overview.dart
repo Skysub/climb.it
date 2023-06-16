@@ -166,11 +166,19 @@ class GymOverviewState extends State<GymOverview> {
                                                     for (String tag
                                                         in getAllTags())
                                                       FilterChip(
-                                                          backgroundColor:
-                                                              Colors.grey[700],
+                                                          elevation: 3,
+                                                          checkmarkColor:
+                                                              Colors.white,
                                                           selectedColor:
                                                               Colors.pink,
-                                                          label: Text(tag),
+                                                          label: Text(tag,
+                                                              style: TextStyle(
+                                                                  color: tagFilters
+                                                                          .contains(
+                                                                              tag)
+                                                                      ? Colors
+                                                                          .white
+                                                                      : null)),
                                                           selected: tagFilters
                                                               .contains(tag),
                                                           onSelected:
@@ -375,11 +383,15 @@ class SortChip extends StatelessWidget {
     return ActionChip(
         backgroundColor: selectedSortMode == sortMode ? Colors.pink : null,
         avatar: selectedSortMode == sortMode
-            ? Icon(sortDescending
-                ? Icons.arrow_downward_rounded
-                : Icons.arrow_upward_rounded)
+            ? Icon(
+                sortDescending
+                    ? Icons.arrow_downward_rounded
+                    : Icons.arrow_upward_rounded,
+                color: Colors.white)
             : null,
-        label: Text(label),
+        label: Text(label,
+            style: TextStyle(
+                color: selectedSortMode == sortMode ? Colors.white : null)),
         onPressed: callback);
   }
 }

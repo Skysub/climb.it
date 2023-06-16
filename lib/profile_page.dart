@@ -154,12 +154,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       const Text(
                         'Recently Visited Centres:',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-                      const SizedBox(height: 10),
-                      for (var center in centers) Text(center)
+                      const SizedBox(height: 5),
+                      for (var center in centers)
+                        Text(center,
+                            style: const TextStyle(color: Colors.white))
                     ],
                   ),
                 ),
@@ -180,12 +182,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       const Text(
                         'Recently Visited Centres:',
                         style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
                       ),
-                      const SizedBox(height: 10),
-                      for (var center in centers.reversed) Text(center)
+                      const SizedBox(height: 5),
+                      for (var center in centers.reversed)
+                        Text(center,
+                            style: const TextStyle(color: Colors.white))
                     ],
                   ),
                 ),
@@ -258,7 +262,6 @@ class _ProfilePageState extends State<ProfilePage> {
             'profile_image', base64Encode(imageFile.readAsBytesSync()));
       }
     });
-
   }
 
   _loadProfile() {

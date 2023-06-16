@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/gym_overview.dart';
 import 'package:climb_it/gyms/tags.dart';
 import 'package:climb_it/main_app_bar.dart';
-import 'package:customizable_counter/customizable_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
@@ -109,19 +108,19 @@ class _RoutePageState extends State<RoutePage> {
                       });
                     },
                   )),
-                  SizedBox(
+                  const SizedBox(
                     width: 30,
                   ),
                   Expanded(
                       child: OutlinedButton(
-                          child: Text("Hint"),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.red,
-                            side: BorderSide(
+                            side: const BorderSide(
                               color: Colors.red,
                             ),
                           ),
-                          onPressed: () => {showHint(HintType.text, "Bruh")}))
+                          onPressed: () => {showHint(HintType.text, "Bruh")},
+                          child: const Text("Hint")))
                 ],
               )),
         ],

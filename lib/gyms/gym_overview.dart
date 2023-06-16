@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:climb_it/gyms/route.dart';
 import 'package:climb_it/gyms/route_item.dart';
+import 'package:climb_it/gyms/route_page.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';

@@ -1,7 +1,8 @@
-
+import 'dart:io';
 import 'package:climb_it/bar%20chart/bar_graph.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({super.key});
@@ -30,6 +31,9 @@ void setName(String name) {
 
   final List<String> centers = ['Center1', 'Center2', 'Center3'];
 
+  File? profileImage;
+  ImagePicker image = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,16 +44,62 @@ void setName(String name) {
           padding: const EdgeInsets.all(15),
           child: Column(
             children: [
-              SizedBox(
-                  width: 150,
-                  height: 150,
-                  child: IconButton(
-                    icon: ClipRRect(
+              Stack(
+                children: [
+                  SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.asset('assets/brix.jpg')),
+                      ),
+                  Positioned(
+                    bottom: 30,
+                    right: 0,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(100),
-                        child: Image.asset('assets/brix.jpg')),
-                    iconSize: 50,
-                    onPressed: () {},
-                  )),
+                        color: Colors.pink,
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context, 
+                            builder: (context) =>  SimpleDialog(
+                              title: const Text('Change Profile Picture'),
+                              children: [
+                                const Center(
+                                  child: Text('Select Option')),
+                                TextButton(
+                                  onPressed: () {
+                                    getFromGallery();
+                                    Navigator.pop(context);
+                                  }, 
+                                  child: const Text('Select from gallery'),
+                                  ),
+                                TextButton(
+                                  onPressed: () {
+                                  getFromCamera();
+                                  Navigator.pop(context);
+                                  },
+                                  child: const Text('Take from camera'),
+                                  ),
+                              ],
+                            ),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(height: 5),
               Center(
                 child: Row(
@@ -167,6 +217,7 @@ void setName(String name) {
       ),
     );
   }
+
   
   void _showChangeNameDialog() async {
     String newName = await showDialog(
@@ -199,4 +250,21 @@ void setName(String name) {
       });
     }
   }
+
+  getFromGallery() async {
+    var img = await image.getImage(source: ImageSource.gallery);
+    setState(() {
+      profileImage = File(img!.path);
+    });
+  }
+  getFromCamera() async {
+    var img = await image.getImage(source: ImageSource.camera);
+    setState(() {
+      profileImage = File(img!.path);
+    });
+  }
 }
+
+
+  
+

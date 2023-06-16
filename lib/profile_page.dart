@@ -193,7 +193,7 @@ void setName(String name) {
                     Column(children: [
                       const Text('Most Visited Centres:', 
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),),
                       const SizedBox(height: 10),
@@ -203,7 +203,7 @@ void setName(String name) {
                       children: [
                         const Text('Recently Visited Centres:',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),),
                         const SizedBox(height: 10),

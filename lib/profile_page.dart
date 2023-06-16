@@ -37,6 +37,7 @@ void setName(String name) {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: const MainAppBar(barTitle: 'Profile'),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

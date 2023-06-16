@@ -119,7 +119,16 @@ class _RoutePageState extends State<RoutePage> {
                               color: Colors.red,
                             ),
                           ),
-                          onPressed: () => {showHint(HintType.text, "Bruh")},
+                          onPressed: () => {
+                                showHint(widget.route.hints
+                                    .firstWhere((e) => e.type == HintType.text,
+                                        orElse: () => Hint(
+                                              name: 'noTextHint',
+                                              type: HintType.text,
+                                              data:
+                                                  '_debug, no text hint found. Hint selection not yet implemented.',
+                                            )))
+                              },
                           child: const Text("Hint")))
                 ],
               )),
@@ -128,14 +137,14 @@ class _RoutePageState extends State<RoutePage> {
     );
   }
 
-  showHint(HintType ht, String data) async {
-    switch (ht) {
+  showHint(Hint hint) async {
+    switch (hint.type) {
       case HintType.text:
         showDialog(
             context: context,
             builder: (BuildContext context) => AlertDialog(
-                    title: const Text('Hint'),
-                    content: Text(data),
+                    title: Text(hint.name),
+                    content: Text(hint.data),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.pop(context, 'OK'),
@@ -150,4 +159,4 @@ class _RoutePageState extends State<RoutePage> {
   }
 }
 
-enum HintType { image, text }
+enum HintType { image, text, video }

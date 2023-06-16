@@ -12,22 +12,29 @@ class ClimbingRoute {
   final String imageUrl;
   final List<String> tags;
   final Color color;
+  final List<Hint> hints;
 
   ClimbingRoute(
       {required this.name,
       required this.difficulty,
       required this.imageUrl,
       required this.tags,
-      required this.color});
+      required this.color,
+      required this.hints});
 
-  static ClimbingRoute fromJSON(Map<dynamic, dynamic> json) {
+  static ClimbingRoute fromJSON(
+      Map<dynamic, dynamic> json, Map<dynamic, dynamic>? hintsJSON) {
     return ClimbingRoute(
         name: json['name'],
         difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '',
         imageUrl: json['img_url'] ??
             'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
         tags: json['tags'] != null ? json['tags'].split(';') : [],
-        color: getColor(json['color']));
+        color: getColor(json['color']),
+        hints: hintsJSON != null
+            ? List.generate(hintsJSON.length,
+                (index) => Hint.fromJSON(hintsJSON['hint${index + 1}']))
+            : []);
   }
 
   //TODO Decice which colors to use. Yellow is too bright
@@ -51,6 +58,22 @@ class ClimbingRoute {
       default:
         return Colors.pink;
     }
+  }
+}
+
+class Hint {
+  final String name;
+  final String data;
+  final HintType type;
+
+  Hint({required this.name, required this.data, required this.type});
+
+  static Hint fromJSON(Map<dynamic, dynamic> json) {
+    return Hint(
+      name: json['name'] ?? 'Hint',
+      data: json['data'],
+      type: HintType.values.byName(json['type']),
+    );
   }
 }
 
@@ -228,7 +251,11 @@ class GymOverviewState extends State<GymOverview> {
         .child(widget.gym.key)
         .once();
     return data.snapshot.children
-        .map((e) => ClimbingRoute.fromJSON(e.value as Map))
+        .map((e) => ClimbingRoute.fromJSON(
+            e.value as Map,
+            e.child('hints').value == null
+                ? null
+                : e.child('hints').value as Map))
         .toList();
   }
 

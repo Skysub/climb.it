@@ -67,18 +67,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      //TODO Set theme data
       theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
       themeMode: ThemeMode.dark,
       home: DarkModeInheritedWidget(
         isDarkMode: isDarkMode,
         toggleDarkMode: toggleDarkMode,
-        child: ScrollbarTheme(
-          data: ScrollbarThemeData(
-            thumbColor:
-                MaterialStateProperty.all(Colors.pink.withOpacity(0.75)),
-          ),
-          child: const Home(),
-        ),
+        child: const Home(),
       ),
     );
   }

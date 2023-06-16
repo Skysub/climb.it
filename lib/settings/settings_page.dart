@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,7 +17,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   static const keyPrimaryCenter = 'key-primaryCenter';
-  bool? isDarkMode;
+  bool isDarkMode = false;
   List<Gym> gymList = []; //List to save gyms from firebase
 
   @override
@@ -27,7 +26,6 @@ class _SettingsPageState extends State<SettingsPage> {
     if (inheritedWidget != null) {
       isDarkMode = inheritedWidget.isDarkMode;
     }
-
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -36,14 +34,14 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsGroup(
               title: 'GENERAL',
               children: <Widget>[
-                const SizedBox(height: 30),
-                buildChoosePrimaryCenter(),
-                const SizedBox(height: 50),
+                const SizedBox(height: 15),
                 buildDarkMode(),
-                const SizedBox(height: 50),
+                const SizedBox(height: 12),
                 buildResetData(),
-                const SizedBox(height: 50),
+                const SizedBox(height: 15),
                 buildHelpAndSupport(),
+                //TODO Handle choosing primary center
+                //buildChoosePrimaryCenter(),
               ],
             ),
           ],
@@ -67,12 +65,8 @@ class _SettingsPageState extends State<SettingsPage> {
       );
 
   Widget buildDarkMode() {
-    if (isDarkMode == null) {
-      return const SizedBox
-          .shrink(); // Hidden until the value of 'isDarkMode' is changed
-    }
     return SwitchListTile(
-      value: isDarkMode!,
+      value: isDarkMode,
       onChanged: (value) => toggleDarkMode(value),
       title: const Text('Dark Mode'),
       secondary:
@@ -92,7 +86,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget buildResetData() => SimpleSettingsTile(
         title: 'Reset Data',
-        subtitle: '',
         leading:
             const IconWidget(icon: Icons.refresh_outlined, color: Colors.pink),
         onTap: () {
@@ -111,14 +104,14 @@ class _SettingsPageState extends State<SettingsPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context)
-                    .pop(false); // close the dialog 'false' (close)
+                    .pop(false); // Close the dialog 'false' (close)
               },
               child: const Text('Close'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context)
-                    .pop(true); // close the dialog 'true' (accept)
+                    .pop(true); // Close the dialog 'true' (accept)
               },
               child: const Text('Accept'),
             ),
@@ -127,14 +120,13 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
     if (resetConfirmed == true) {
-      resetData();
+      _resetData();
     }
   }
 
-  void resetData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    // ignore: use_build_context_synchronously
+  void _resetData() {
+    // Clear all preferences and reload the app using Phoenix
+    SharedPreferences.getInstance().then((prefs) => prefs.clear());
     Phoenix.rebirth(context);
   }
 

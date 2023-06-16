@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:climb_it/gyms/route.dart';
 import 'package:climb_it/gyms/route_item.dart';
@@ -12,7 +13,7 @@ import 'gym.dart';
 class ClimbingRoute {
   final String id;
   final String name;
-  final String difficulty;
+  final int difficulty;
   final String imageUrl;
   final List<String> tags;
   final Color color;
@@ -34,7 +35,7 @@ class ClimbingRoute {
     return ClimbingRoute(
         id: id,
         name: json['name'],
-        difficulty: json['difficulty'] != null ? 'V${json['difficulty']}' : '',
+        difficulty: json['difficulty'] ?? 0,
         imageUrl: json['img_url'] ??
             'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
         tags: json['tags'] != null ? json['tags'].split(';') : [],
@@ -278,17 +279,23 @@ class GymOverviewState extends State<GymOverview> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? completedString = prefs.getString('routesCompleted');
     completedMap = completedString != null ? jsonDecode(completedString) : {};
+
     setCompletedStatus();
 
     return routes;
   }
 
-  changeCompletedStatus(String routeKey, bool isCompleted) {
+  changeCompletedStatus(ClimbingRoute route, bool isCompleted) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      if (!isCompleted) {
-        completedMap.remove(routeKey);
+      if (isCompleted) {
+        completedMap[route.id] = isCompleted;
+        prefs.setInt('V${route.difficulty}',
+            (prefs.getInt('V${route.difficulty}') ?? 0) + 1);
       } else {
-        completedMap[routeKey] = isCompleted;
+        completedMap.remove(route.id);
+        prefs.setInt('V${route.difficulty}',
+            max((prefs.getInt('V${route.difficulty}') ?? 0) - 1, 0));
       }
       setCompletedStatus();
       saveRouteData();

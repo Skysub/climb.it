@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
-typedef CompletedCallback = void Function(String, bool);
+typedef CompletedCallback = void Function(ClimbingRoute, bool);
 
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key, required this.route, required this.callback});
@@ -92,7 +92,7 @@ class _RoutePageState extends State<RoutePage> {
                     onToggle: (val) {
                       setState(() {
                         widget.route.isCompleted = val;
-                        widget.callback(widget.route.id, val);
+                        widget.callback(widget.route, val);
                       });
                     },
                   )),

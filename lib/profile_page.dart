@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:climb_it/bar%20chart/bar_graph.dart';
 import 'package:climb_it/main_app_bar.dart';
@@ -13,13 +14,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String name = 'Profile Name';
+  String profileName = 'Profile Name';
 
-  Image profileImage = Image.asset('assets/defaultprofile.png', fit: BoxFit.cover);
+  Image profileImage =
+      Image.asset('assets/defaultprofile.png', fit: BoxFit.cover);
   ImagePicker imagePicker = ImagePicker();
 
   final List<double> vAmounts = [0, 0, 0, 0, 0, 0, 0, 0];
   final List<String> centers = ['Center1', 'Center2', 'Center3'];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    name,
+                    profileName,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -198,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _showChangeNameDialog() async {
-    String newName = await showDialog(
+    String? newName = await showDialog(
       context: context,
       builder: (BuildContext context) {
         String textFieldValue = '';
@@ -221,28 +229,51 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       },
     );
-
-    if (newName != '') {
+    if (newName != '' && newName != null) {
       setState(() {
-        name = newName;
+        profileName = newName;
       });
+      var prefs = await SharedPreferences.getInstance();
+      prefs.setString('profile_name', profileName);
     }
   }
 
   _getFromGallery() async {
     var img = await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      if (img != null) {
-        profileImage = Image.file(File(img.path), fit: BoxFit.cover);
-      }
-    });
+    await _saveImage(img);
   }
 
   _getFromCamera() async {
     var img = await imagePicker.pickImage(source: ImageSource.camera);
+    await _saveImage(img);
+  }
+
+  _saveImage(XFile? img) async {
+    var prefs = await SharedPreferences.getInstance();
     setState(() {
       if (img != null) {
-        profileImage = Image.file(File(img.path), fit: BoxFit.cover);
+        File imageFile = File(img.path);
+        profileImage = Image.file(imageFile, fit: BoxFit.cover);
+        prefs.setString(
+            'profile_image', base64Encode(imageFile.readAsBytesSync()));
+      }
+    });
+
+  }
+
+  _loadProfile() {
+    SharedPreferences.getInstance().then((prefs) {
+      // Load profile name
+      profileName = prefs.getString('profile_name') ?? 'Profile Name';
+      // Load profile image from base64
+      String? imageBase64 = prefs.getString('profile_image');
+      if (imageBase64 != null) {
+        try {
+          profileImage =
+              Image.memory(base64Decode(imageBase64), fit: BoxFit.cover);
+        } catch (e) {
+          debugPrint(e.toString());
+        }
       }
     });
   }

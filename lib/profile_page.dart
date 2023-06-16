@@ -3,8 +3,19 @@ import 'package:climb_it/bar%20chart/bar_graph.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String name = 'Profile Name';
+
+void setName(String name) {
+  this.name = name;
+}
 
   final List<double> vAmounts = [
     14.0,
@@ -16,6 +27,7 @@ class ProfilePage extends StatelessWidget {
     6.0,
     7.0,
   ];
+
   final List<String> centers = ['Center1', 'Center2', 'Center3'];
 
   @override
@@ -43,18 +55,20 @@ class ProfilePage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 10),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
                       child: Text(
-                        'Christian Brix', 
-                        style: TextStyle(
+                        name, 
+                        style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                       ),),
                     ),
                     const SizedBox(width: 10),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                      _showChangeNameDialog();
+                      },
                       child: Container(
                           width: 20,
                           height: 20,
@@ -152,5 +166,37 @@ class ProfilePage extends StatelessWidget {
         ),
       ),
     );
+  }
+  
+  void _showChangeNameDialog() async {
+    String newName = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String textFieldValue = '';
+
+        return AlertDialog(
+          title: const Text('Change Name'),
+          content: TextField(
+            onChanged: (value) {
+              textFieldValue = value;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(textFieldValue);
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (newName != '') {
+      setState(() {
+        name = newName;
+      });
+    }
   }
 }

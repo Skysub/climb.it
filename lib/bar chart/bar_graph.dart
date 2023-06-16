@@ -5,43 +5,40 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class MyBarGraph extends StatelessWidget {
-  final List<double> vAmmount;
+  final List<double> amounts;
   const MyBarGraph({
     super.key,
-    required this.vAmmount,
+    required this.amounts,
   });
 
   @override
   Widget build(BuildContext context) {
-    BarData myBarData = BarData(
-      v0Amount: vAmmount[0],
-      v1Amount: vAmmount[1],
-      v2Amount: vAmmount[2],
-      v3Amount: vAmmount[3],
-      v4Amount: vAmmount[4],
-      v5Amount: vAmmount[5],
-      v6Amount: vAmmount[6],
-      v7Amount: vAmmount[7],
-    );
+    BarData myBarData = BarData(amounts: amounts);
     myBarData.initializeBarData();
 
     return BarChart(
       BarChartData(
-        maxY: vAmmount.reduce(max),
+        barTouchData: BarTouchData(enabled: false),
+        maxY: amounts.reduce(max),
         minY: 0,
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(show: false),
-        titlesData: const FlTitlesData(
-          show: true,
-          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          bottomTitles: AxisTitles(
-            sideTitles: SideTitles(
-              showTitles: true,
-              getTitlesWidget: getBottomTitles,
+        titlesData: FlTitlesData(
+            show: true,
+            topTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            bottomTitles: const AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: getBottomTitles,
+              ),
             ),
-          ),
-        ),
+            leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                    showTitles: true,
+                    interval: max(1, (amounts.reduce(max) ~/ 4).toDouble())))),
         barGroups: myBarData.barData
             .map(
               (data) => BarChartGroupData(
@@ -63,39 +60,8 @@ class MyBarGraph extends StatelessWidget {
 }
 
 Widget getBottomTitles(double value, TitleMeta meta) {
-  const style = TextStyle(
-    fontSize: 14,
-  );
-
-  Widget text;
-  switch (value.toInt()) {
-    case 0:
-      text = const Text('V0', style: style);
-      break;
-    case 1:
-      text = const Text('V1', style: style);
-      break;
-    case 2:
-      text = const Text('V2', style: style);
-      break;
-    case 3:
-      text = const Text('V3', style: style);
-      break;
-    case 4:
-      text = const Text('V4', style: style);
-      break;
-    case 5:
-      text = const Text('V5', style: style);
-      break;
-    case 6:
-      text = const Text('V6', style: style);
-      break;
-    case 7:
-      text = const Text('V7', style: style);
-      break;
-    default:
-      text = const Text('', style: style);
-  }
-
-  return SideTitleWidget(axisSide: meta.axisSide, child: text);
+  return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: Text('V${value.toStringAsFixed(0)}',
+          style: const TextStyle(fontSize: 14)));
 }

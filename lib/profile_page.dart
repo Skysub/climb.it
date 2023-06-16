@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({super.key});
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -15,33 +15,11 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   String name = 'Profile Name';
 
-  void setName(String name) {
-    this.name = name;
-  }
+  Image profileImage = Image.asset('assets/defaultprofile.png', fit: BoxFit.cover);
+  ImagePicker imagePicker = ImagePicker();
 
-  Future<List<double>> loadAmounts() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    for (int i = 0; i < 8; i++) {
-      vAmounts[i] = prefs.getInt('V$i')?.toDouble() ?? 0;
-    }
-    return vAmounts;
-  }
-
-  final List<double> vAmounts = [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-  ];
-
+  final List<double> vAmounts = [0, 0, 0, 0, 0, 0, 0, 0];
   final List<String> centers = ['Center1', 'Center2', 'Center3'];
-
-  Image? profileImage = Image.asset('assets/defaultprofile.png');
-  ImagePicker image = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +29,9 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(30),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Stack(
                 children: [
@@ -60,210 +39,145 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 150,
                     height: 150,
                     child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(300),
                         child: profileImage),
                   ),
                   Positioned(
-                    bottom: 30,
+                    bottom: 0,
                     right: 0,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(100),
-                        color: Colors.pink,
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => SimpleDialog(
-                              title: const Center(
-                                  child: Text('Change Profile Picture')),
-                              children: [
-                                const Center(child: Text('Select Option')),
-                                TextButton(
-                                  onPressed: () {
-                                    getFromGallery();
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Select from gallery'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    getFromCamera();
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Take from camera'),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.camera_alt,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(10),
+                          backgroundColor: Colors.pink,
+                          foregroundColor: Colors.orange),
+                      child: const Icon(Icons.camera_alt, color: Colors.white),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => SimpleDialog(
+                            title: const Center(
+                                child: Text('Change Profile Picture')),
+                            children: [
+                              const Center(child: Text('Select Option')),
+                              TextButton(
+                                onPressed: () {
+                                  _getFromGallery();
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Select from gallery'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  _getFromCamera();
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Take from camera'),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 5),
-              Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 10),
-                      child: Text(
-                        name,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    InkWell(
-                      onTap: () {
-                        _showChangeNameDialog();
-                      },
-                      child: Container(
-                          width: 20,
-                          height: 20,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.pink,
-                          ),
-                          child: const Icon(
-                            Icons.edit,
-                            size: 12,
-                            color: Colors.white,
-                          )),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.orange,
-                    border: Border.all(
-                      color: Colors.orange,
-                      width: 5,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black,
-                        blurRadius: 4,
-                      )
-                    ]),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    child: Column(
-                      children: [
-                        const Text(
-                          'Routes:',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          height: 200,
-                          child: FutureBuilder(
-                              future: loadAmounts(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return MyBarGraph(
-                                    vAmmount: vAmounts,
-                                  );
-                                } else {
-                                  return const CircularProgressIndicator();
-                                }
-                              }),
-                        ),
-                      ],
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
+                  const SizedBox(width: 10),
+                  InkWell(
+                    onTap: () {
+                      _showChangeNameDialog();
+                    },
+                    child: Container(
+                        width: 25,
+                        height: 25,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.pink,
+                        ),
+                        child: const Icon(
+                          Icons.edit,
+                          size: 12,
+                          color: Colors.white,
+                        )),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
+              const Text('Routes Completed',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              SizedBox(
+                height: 200,
+                child: FutureBuilder(
+                    future: _loadAmounts(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return MyBarGraph(
+                          amounts: vAmounts,
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    }),
+              ),
+              const SizedBox(height: 30),
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.pink,
-                  border: Border.all(
-                    color: Colors.pink,
-                    width: 5,
-                  ),
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 4,
-                    ),
-                  ],
                 ),
-                child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(children: [
-                        const Text(
-                          'Most Visited Centres:',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      const Text(
+                        'Recently Visited Centres:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const SizedBox(height: 10),
-                        for (var center in centers) Text(center)
-                      ]),
+                      ),
+                      const SizedBox(height: 10),
+                      for (var center in centers) Text(center)
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.pink,
-                  border: Border.all(
-                    color: Colors.pink,
-                    width: 5,
-                  ),
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black,
-                      blurRadius: 4,
-                    ),
-                  ],
                 ),
-                child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(
-                        children: [
-                          const Text(
-                            'Recently Visited Centres:',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          for (var center in centers.reversed) Text(center)
-                        ],
-                      )
+                      const Text(
+                        'Recently Visited Centres:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      for (var center in centers.reversed) Text(center)
                     ],
                   ),
                 ),
@@ -273,6 +187,14 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  Future<List<double>> _loadAmounts() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    for (int i = 0; i < 8; i++) {
+      vAmounts[i] = prefs.getInt('V$i')?.toDouble() ?? 0;
+    }
+    return vAmounts;
   }
 
   void _showChangeNameDialog() async {
@@ -307,17 +229,21 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  getFromGallery() async {
-    var img = await image.pickImage(source: ImageSource.gallery);
+  _getFromGallery() async {
+    var img = await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      profileImage = Image.file(File(img!.path));
+      if (img != null) {
+        profileImage = Image.file(File(img.path), fit: BoxFit.cover);
+      }
     });
   }
 
-  getFromCamera() async {
-    var img = await image.pickImage(source: ImageSource.camera);
+  _getFromCamera() async {
+    var img = await imagePicker.pickImage(source: ImageSource.camera);
     setState(() {
-      profileImage = Image.file(File(img!.path));
+      if (img != null) {
+        profileImage = Image.file(File(img.path), fit: BoxFit.cover);
+      }
     });
   }
 }

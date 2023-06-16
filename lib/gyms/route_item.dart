@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/tags.dart';
 import 'package:flutter/material.dart';
 
-import 'gym_overview.dart';
+import 'climbing_route.dart';
 
 class RouteItem extends StatelessWidget {
   const RouteItem({super.key, required this.climbingRoute});

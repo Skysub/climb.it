@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
+import 'climbing_route.dart';
+
 typedef CompletedCallback = void Function(ClimbingRoute, bool);
 
 class RoutePage extends StatefulWidget {

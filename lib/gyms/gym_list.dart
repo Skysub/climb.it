@@ -1,3 +1,4 @@
+import 'package:climb_it/location/location_manager.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -20,13 +21,7 @@ class GymListState extends State<GymList> {
   @override
   void initState() {
     super.initState();
-    gymFuture = getGymList();
-  }
-
-  Future<void> updateGymList() async {
-    setState(() {
-      gymFuture = getGymList();
-    });
+    gymFuture = _getGymList();
   }
 
   @override
@@ -34,7 +29,7 @@ class GymListState extends State<GymList> {
     return Scaffold(
       appBar: const MainAppBar(barTitle: 'Gyms'),
       body: RefreshIndicator(
-        onRefresh: updateGymList,
+        onRefresh: _updateGymList,
         child: FutureBuilder(
             future: gymFuture,
             builder: (context, gymSnapshot) {
@@ -69,10 +64,18 @@ class GymListState extends State<GymList> {
     );
   }
 
-  Future<List<Gym>> getGymList() async {
+  Future<void> _updateGymList() async {
+    setState(() {
+      gymFuture = _getGymList();
+    });
+  }
+
+  Future<List<Gym>> _getGymList() async {
     //Calling both async functions in parrallel
-    var futures = await Future.wait(
-        [FirebaseDatabase.instance.ref().child('gyms').once(), getUserPos()]);
+    var futures = await Future.wait([
+      FirebaseDatabase.instance.ref().child('gyms').once(),
+      LocationManager.getUserPos()
+    ]);
 
     //Convincing the compiler that the objects have type
     DatabaseEvent data = futures[0] as DatabaseEvent;
@@ -93,40 +96,5 @@ class GymListState extends State<GymList> {
       gymList.sort((a, b) => a.distanceKm!.compareTo(b.distanceKm!));
     }
     return gymList;
-  }
-
-  Future<Position?> getUserPos() async {
-    if (await checkLocationPermission()) {
-      return await Geolocator.getCurrentPosition();
-    }
-    return null;
-  }
-
-  Future<bool> checkLocationPermission() async {
-    // Return false if the location service isn't enabled
-    bool locationServiceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!locationServiceEnabled) {
-      return false;
-    }
-
-    // Check location permission
-    LocationPermission permission = await Geolocator.checkPermission();
-
-    // If 'deniedForever' then we can't get the location
-    if (permission == LocationPermission.deniedForever) {
-      return false;
-    }
-
-    // If 'denied', ask for the permission again
-    if (permission == LocationPermission.denied) {
-      // If the permission is still 'denied
-      permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.always &&
-          permission != LocationPermission.whileInUse) {
-        return false;
-      }
-    }
-    // Else we have 'whileInUse' or 'always', which means we can get the location
-    return true;
   }
 }

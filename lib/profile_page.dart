@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:climb_it/bar%20chart/bar_graph.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -44,10 +45,10 @@ class _ProfilePageState extends State<ProfilePage> {
               Stack(
                 children: [
                   SizedBox(
-                    width: 150,
-                    height: 150,
+                    width: 175,
+                    height: 175,
                     child: ClipRRect(
-                        borderRadius: BorderRadius.circular(300),
+                        borderRadius: BorderRadius.circular(175),
                         child: profileImage),
                   ),
                   Positioned(
@@ -97,7 +98,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Text(
                     profileName,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -107,37 +108,48 @@ class _ProfilePageState extends State<ProfilePage> {
                       _showChangeNameDialog();
                     },
                     child: Container(
-                        width: 25,
-                        height: 25,
+                        width: 30,
+                        height: 30,
                         decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.pink,
                         ),
                         child: const Icon(
                           Icons.edit,
-                          size: 12,
+                          size: 16,
                           color: Colors.white,
                         )),
                   ),
                 ],
               ),
               const SizedBox(height: 30),
-              const Text('Routes Completed',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              SizedBox(
-                height: 200,
-                child: FutureBuilder(
-                    future: _loadAmounts(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return MyBarGraph(
-                          amounts: vAmounts,
-                        );
-                      } else {
-                        return const CircularProgressIndicator();
+              const Text('Routes Completed:',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 15),
+              FutureBuilder(
+                  future: _loadAmounts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (vAmounts.reduce(max) == 0) {
+                        return const Column(children: [
+                          SizedBox(height: 10),
+                          Text(
+                              'Complete a route come back\nto track your progression!',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold))
+                        ]);
                       }
-                    }),
-              ),
+                      return SizedBox(
+                        height: 200,
+                        child: MyBarGraph(
+                          amounts: vAmounts,
+                        ),
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  }),
               const SizedBox(height: 30),
               Container(
                 width: double.infinity,

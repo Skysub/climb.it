@@ -95,16 +95,7 @@ class _RoutePageState extends State<RoutePage> {
                                 color: Colors.red,
                               ),
                             ),
-                            onPressed: () => {
-                                  showHint(widget.route.hints.firstWhere(
-                                      (e) => e.type == HintType.text,
-                                      orElse: () => Hint(
-                                            name: 'noTextHint',
-                                            type: HintType.text,
-                                            data:
-                                                '_debug, no text hint found. Hint selection not yet implemented.',
-                                          )))
-                                },
+                            onPressed: () => {showHintSelector()},
                             child: const Text("Need A Hint?")),
                       ),
                   ],
@@ -144,6 +135,33 @@ class _RoutePageState extends State<RoutePage> {
     );
   }
 
+  showHintSelector() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+                title: const Text("Choose a hint"),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: List<ElevatedButton>.generate(
+                      widget.route.hints.length,
+                      (i) => ElevatedButton(
+                            child: Text(widget.route.hints[i].name),
+                            onPressed: () {
+                              Navigator.pop(context);
+                              showHint(widget.route.hints[i]);
+                            },
+                          )),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'OK'),
+                    child: const Text('OK'),
+                  ),
+                ]));
+  }
+
   showHint(Hint hint) async {
     switch (hint.type) {
       case HintType.text:
@@ -160,7 +178,20 @@ class _RoutePageState extends State<RoutePage> {
                     ]));
         break;
       case HintType.image:
-        // TODO Handle image hint
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+                    title: Text(hint.name),
+                    content: CachedNetworkImage(
+                        imageUrl: hint.data,
+                        placeholder: (context, url) =>
+                            const Center(child: CircularProgressIndicator())),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'OK'),
+                        child: const Text('OK'),
+                      ),
+                    ]));
         break;
       case HintType.video:
         // TODO Handle video hint

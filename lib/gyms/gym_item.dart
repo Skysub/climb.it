@@ -21,8 +21,16 @@ class GymItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(gym.name,
-                    style: const TextStyle(fontSize: 24, color: Colors.white)),
+                Row(
+                  children: [
+                    Text(gym.name,
+                        style:
+                            const TextStyle(fontSize: 24, color: Colors.white)),
+                    const SizedBox(width: 8),
+                    if (gym.isFavourite)
+                      const Icon(Icons.favorite, color: Colors.white),
+                  ],
+                ),
                 if (gym.distanceKm != null)
                   Column(children: [
                     const Icon(Icons.location_on, color: Colors.white),

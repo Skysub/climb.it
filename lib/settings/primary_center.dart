@@ -2,6 +2,7 @@ import 'package:climb_it/firebase/firebase_manager.dart';
 import 'package:climb_it/gyms/gym.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'icon_widget.dart';
 
@@ -40,8 +41,15 @@ class _PrimaryCenterSettingsState extends State<PrimaryCenterSettings> {
               color: Colors.pink,
             ),
             onChange: (primaryCenter) async {
-              // Save the selected primary center
-              // You can add your implementation here
+              // If other than 'None' is selected, save the key of the primary gym
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              if (primaryCenter > 0) {
+                prefs.setString(
+                    'primary_gym_key', gymList[primaryCenter - 1].key);
+              }
+              else {
+                prefs.remove('primary_gym_key');
+              }
             },
           );
         } else if (snapshot.hasError) {

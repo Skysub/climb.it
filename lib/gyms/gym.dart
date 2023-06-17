@@ -4,6 +4,7 @@ class Gym {
   final double latitude;
   final double longitude;
   double? distanceKm;
+  bool isFavourite = false;
 
   Gym(
       {required this.key,

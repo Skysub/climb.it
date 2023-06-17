@@ -21,7 +21,7 @@ class GymListState extends State<GymList> {
   @override
   void initState() {
     super.initState();
-    gymFuture = _getGymList();
+    gymFuture = getGymList();
   }
 
   @override
@@ -66,11 +66,11 @@ class GymListState extends State<GymList> {
 
   Future<void> _updateGymList() async {
     setState(() {
-      gymFuture = _getGymList();
+      gymFuture = getGymList();
     });
   }
 
-  Future<List<Gym>> _getGymList() async {
+  Future<List<Gym>> getGymList() async {
     //Calling both async functions in parrallel
     var futures = await Future.wait([
       FirebaseDatabase.instance.ref().child('gyms').once(),

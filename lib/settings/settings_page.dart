@@ -7,6 +7,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'icon_widget.dart';
 import 'dark_mode_inherited_widget.dart';
 import 'primary_center.dart';
+import 'dark_mode.dart';
 import 'help_and_support.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: <Widget>[
                 const PrimaryCenterSettings(),
                 const SizedBox(height: 15),
-                buildDarkMode(),
+                const DarkModeSettings(),
                 const SizedBox(height: 12),
                 buildResetData(),
                 const SizedBox(height: 15),

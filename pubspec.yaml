@@ -17,11 +17,11 @@ dependencies:
   flutter_settings_screens: ^0.3.3-null-safety+2
   fl_chart: ^0.63.0
   geolocator: ^9.0.2
-  customizable_counter: ^1.0.4 #Might not be needed 
   shared_preferences: ^2.1.2
   flutter_switch: ^0.3.2
   image_picker: ^0.8.9
   url_launcher: ^6.1.11
+  flutter_launcher_icons: ^0.13.1
 
 
 dev_dependencies:
@@ -29,6 +29,13 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.0
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  min_sdk_android: 21
+  remove_alpha_ios: true
 
 flutter:
   assets:

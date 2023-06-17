@@ -1,10 +1,7 @@
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 
-import 'icon_widget.dart';
 import 'primary_center.dart';
 import 'dark_mode.dart';
 import 'reset_data.dart';

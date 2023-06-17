@@ -274,11 +274,11 @@ class GymOverviewState extends State<GymOverview> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       if (isCompleted) {
-        completedMap[route.id] = isCompleted;
+        completedMap[route.key] = isCompleted;
         prefs.setInt('V${route.difficulty}',
             (prefs.getInt('V${route.difficulty}') ?? 0) + 1);
       } else {
-        completedMap.remove(route.id);
+        completedMap.remove(route.key);
         prefs.setInt('V${route.difficulty}',
             max((prefs.getInt('V${route.difficulty}') ?? 0) - 1, 0));
       }
@@ -289,7 +289,7 @@ class GymOverviewState extends State<GymOverview> {
 
   void setCompletedStatus() {
     for (ClimbingRoute route in routes) {
-      route.isCompleted = completedMap[route.id] ?? false;
+      route.isCompleted = completedMap[route.key] ?? false;
     }
   }
 

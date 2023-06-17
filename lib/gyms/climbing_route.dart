@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'hint.dart';
 
 class ClimbingRoute {
-  final String id;
+  final String key;
   final String name;
   final int difficulty;
   final String imageUrl;
@@ -13,7 +13,7 @@ class ClimbingRoute {
   bool isCompleted;
 
   ClimbingRoute(
-      {required this.id,
+      {required this.key,
       required this.name,
       required this.difficulty,
       required this.imageUrl,
@@ -23,9 +23,9 @@ class ClimbingRoute {
       required this.isCompleted});
 
   static ClimbingRoute fromJSON(
-      Map<dynamic, dynamic> json, Map<dynamic, dynamic>? hintsJSON, String id) {
+      Map<dynamic, dynamic> json, Map<dynamic, dynamic>? hintsJSON, String key) {
     return ClimbingRoute(
-        id: id,
+        key: key,
         name: json['name'],
         difficulty: json['difficulty'] ?? 0,
         imageUrl: json['img_url'] ??

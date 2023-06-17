@@ -18,7 +18,7 @@ class _DarkModeSettingsState extends State<DarkModeSettings> {
     return SwitchListTile(
       value: isDarkMode,
       onChanged: toggleDarkMode,
-      title: const Text('Dark Mode'),
+      title: const Text('Dark Mode', style: TextStyle(fontWeight: FontWeight.w500)),
       secondary:
           const IconWidget(icon: Icons.dark_mode_outlined, color: Colors.pink),
     );

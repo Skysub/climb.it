@@ -21,7 +21,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-   runApp(
+  runApp(
     Phoenix(
       child: const MyApp(),
     ),
@@ -66,10 +66,19 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      //TODO Set theme data
-      theme: isDarkMode ? ThemeData.dark() : ThemeData.light(),
-      themeMode: ThemeMode.dark,
+      title: 'climb.it',
+      theme: ThemeData(
+          brightness: Brightness.light,
+          scrollbarTheme: ScrollbarThemeData(
+              thumbColor:
+                  MaterialStateProperty.all(Colors.pink.withOpacity(0.75)))),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scrollbarTheme: ScrollbarThemeData(
+            thumbColor:
+                MaterialStateProperty.all(Colors.pink.withOpacity(0.75))),
+      ),
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       home: DarkModeInheritedWidget(
         isDarkMode: isDarkMode,
         toggleDarkMode: toggleDarkMode,

@@ -27,6 +27,7 @@ class _RoutePageState extends State<RoutePage> {
 
   @override
   void initState() {
+    // TODO Choose video from hint if available
     _controller = VideoPlayerController.network(
         "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4");
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -39,91 +40,107 @@ class _RoutePageState extends State<RoutePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MainAppBar(barTitle: widget.route.name),
-      body: SingleChildScrollView(
+      body: Scrollbar(
+        child: SingleChildScrollView(
           child: Column(
-        children: [
-          CachedNetworkImage(
-            imageUrl: widget.route.imageUrl,
-            placeholder: (context, url) =>
-                const Center(child: CircularProgressIndicator()),
-          ),
-          Text(widget.route.name),
-          Tags(tags: widget.route.tags, color: widget.route.color),
-          FutureBuilder(
-              future: _initializeVideoPlayerFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Center(
-                    child: AspectRatio(
-                        aspectRatio: _controller.value.aspectRatio,
-                        child: VideoPlayer(_controller)),
-                  );
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
-          FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                if (_controller.value.isPlaying) {
-                  _controller.pause();
-                } else {
-                  _controller.play();
-                }
-              });
-            },
-          ),
-          const SizedBox(height: 5),
-          Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: FlutterSwitch(
-                    width: 160,
-                    inactiveText: "Not Completed",
-                    activeText: "Completed!",
-                    padding: 8,
-                    inactiveColor: Colors.pink,
-                    activeColor: Colors.orange,
-                    toggleColor: Colors.black,
-                    value: widget.route.isCompleted,
-                    showOnOff: true,
-                    onToggle: (val) {
-                      setState(() {
-                        widget.route.isCompleted = val;
-                        widget.callback(widget.route, val);
-                      });
-                    },
-                  )),
-                  const SizedBox(
-                    width: 30,
-                  ),
-                  Expanded(
-                      child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.red,
-                            side: const BorderSide(
-                              color: Colors.red,
+            children: [
+              CachedNetworkImage(
+                imageUrl: widget.route.imageUrl,
+                placeholder: (context, url) =>
+                    const Center(child: CircularProgressIndicator()),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        FlutterSwitch(
+                          width: 160,
+                          inactiveText: "Not Completed",
+                          activeText: "Completed!",
+                          padding: 8,
+                          activeColor: Colors.green,
+                          inactiveColor: Colors.red,
+                          activeTextColor: Colors.white,
+                          inactiveTextColor: Colors.white,
+                          activeTextFontWeight: FontWeight.bold,
+                          inactiveTextFontWeight: FontWeight.bold,
+                          toggleColor: Colors.white,
+                          value: widget.route.isCompleted,
+                          showOnOff: true,
+                          onToggle: (val) {
+                            setState(() {
+                              widget.route.isCompleted = val;
+                              widget.callback(widget.route, val);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Tags(
+                      tags: widget.route.tags,
+                      color: widget.route.color,
+                    ),
+                    const SizedBox(height: 10),
+                    if (widget.route.hints.isNotEmpty)
+                      Center(
+                        child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: Colors.red,
+                              side: const BorderSide(
+                                color: Colors.red,
+                              ),
                             ),
-                          ),
-                          onPressed: () => {
-                                showHint(widget.route.hints
-                                    .firstWhere((e) => e.type == HintType.text,
-                                        orElse: () => Hint(
-                                              name: 'noTextHint',
-                                              type: HintType.text,
-                                              data:
-                                                  '_debug, no text hint found. Hint selection not yet implemented.',
-                                            )))
-                              },
-                          child: const Text("Hint")))
-                ],
-              )),
-        ],
-      )),
+                            onPressed: () => {
+                                  showHint(widget.route.hints.firstWhere(
+                                      (e) => e.type == HintType.text,
+                                      orElse: () => Hint(
+                                            name: 'noTextHint',
+                                            type: HintType.text,
+                                            data:
+                                                '_debug, no text hint found. Hint selection not yet implemented.',
+                                          )))
+                                },
+                            child: const Text("Need A Hint?")),
+                      ),
+                  ],
+                ),
+              ),
+              // TODO Move video player
+              // FutureBuilder(
+              //     future: _initializeVideoPlayerFuture,
+              //     builder: (context, snapshot) {
+              //       if (snapshot.connectionState == ConnectionState.done) {
+              //         return Center(
+              //           child: AspectRatio(
+              //               aspectRatio: _controller.value.aspectRatio,
+              //               child: VideoPlayer(_controller)),
+              //         );
+              //       } else {
+              //         return const Center(
+              //           child: CircularProgressIndicator(),
+              //         );
+              //       }
+              //     }),
+              // FloatingActionButton(
+              //   onPressed: () {
+              //     setState(() {
+              //       if (_controller.value.isPlaying) {
+              //         _controller.pause();
+              //       } else {
+              //         _controller.play();
+              //       }
+              //     });
+              //   },
+              // ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -143,8 +160,11 @@ class _RoutePageState extends State<RoutePage> {
                     ]));
         break;
       case HintType.image:
+        // TODO Handle image hint
         break;
-      default:
+      case HintType.video:
+        // TODO Handle video hint
+        break;
     }
   }
 }

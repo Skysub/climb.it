@@ -21,6 +21,7 @@ dependencies:
   shared_preferences: ^2.1.2
   flutter_switch: ^0.3.2
   image_picker: ^0.8.9
+  url_launcher: ^6.1.11
 
 
 dev_dependencies:

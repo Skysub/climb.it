@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'icon_widget.dart';
 import 'dark_mode_inherited_widget.dart';
@@ -54,7 +55,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
    Widget buildChoosePrimaryCenter() {
     return FutureBuilder<List<Gym>>(
-      future: _getGymList(), // Hent gymlisten fra Firebase
+      future: _getGymList(), // get gymList from firebase
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           List<Gym> gyms = snapshot.data!;
@@ -76,9 +77,9 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         } else if (snapshot.hasError) {
           return const Text(
-              'Error loading gyms'); // Håndter fejl i hentning af gymlisten
+              'Error loading gyms'); 
         } else {
-          return const CircularProgressIndicator(); // Vis en indikator, mens gymlisten indlæses
+          return const CircularProgressIndicator(); // show indicator while loading gymlist
         }
       },
     );
@@ -157,48 +158,67 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget buildHelpAndSupport() => SimpleSettingsTile(
-        title: 'Help/Support',
-        leading: const IconWidget(
-            icon: Icons.headset_mic_outlined, color: Colors.pink),
-        onTap: () {
-          _showHelpAndSupport();
-        },
-      );
-
-  void _showHelpAndSupport() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Help/Support'),
-          content: const Row(
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text('Email:'), Text('Tlf:')],
-              ),
-              SizedBox(width: 15),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('example@mail.com'),
-                  Text('+45 1234 5678'),
-                ],
-              )
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        );
+      title: 'Help/Support',
+      subtitle: '',
+      leading: const IconWidget(
+          icon: Icons.headset_mic_outlined, color: Colors.pink),
+      onTap: () {
+        _showHelpAndSupportDialog();
       },
     );
+
+void _showHelpAndSupportDialog() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Help and Support'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            InkWell(
+              onTap: () {
+                _launchPhone('+45 12345 5678'); 
+              },
+              child: const Text('Phone: +45 1234 5678'), 
+            ),
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: () {
+                _launchEmail('support@example.com'); 
+              },
+              child: const Text('Email: support@example.com'), 
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _launchPhone(String phoneNumber) async {
+  final phoneUrl = 'tel:$phoneNumber';
+  if (await canLaunchUrl(phoneUrl as Uri)) {
+    await launchUrl(Uri.parse(phoneUrl));
+  } else {
+    throw 'Could not launch $phoneUrl';
   }
+}
+
+void _launchEmail(String emailAddress) async {
+  final emailUrl = 'mailto:$emailAddress';
+  if (await canLaunchUrl(emailUrl as Uri)) {
+    await launchUrl(Uri.parse(emailUrl));
+  } else {
+    throw 'Could not launch $emailUrl';
+  }
+}
 }

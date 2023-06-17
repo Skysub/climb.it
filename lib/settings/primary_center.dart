@@ -1,38 +1,42 @@
+import 'package:climb_it/firebase/firebase_manager.dart';
+import 'package:climb_it/gyms/gym.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 
-import '../gyms/gym.dart';
-import '../gyms/gym_list.dart';
 import 'icon_widget.dart';
 
 class PrimaryCenterSettings extends StatefulWidget {
   const PrimaryCenterSettings({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _PrimaryCenterSettingsState createState() => _PrimaryCenterSettingsState();
+  createState() => _PrimaryCenterSettingsState();
 }
 
 class _PrimaryCenterSettingsState extends State<PrimaryCenterSettings> {
   static const keyPrimaryCenter = 'key-primaryCenter';
-  List<Gym> gymList = []; //List to save gyms from firebase
+  late Future<List<Gym>> gymFuture;
+  List<Gym> gymList = []; // List to save gyms from Firebase
+
+  @override
+  void initState() {
+    super.initState();
+    gymFuture = FirebaseManager.geGymList(calculateDistances: false);
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Gym>>(
-      future: _getGymList(), // get gymList from firebase
+      future: gymFuture,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          List<Gym> gyms = snapshot.data!;
+          gymList = snapshot.data!;
           return DropDownSettingsTile(
             settingKey: keyPrimaryCenter,
-            title: 'Choose primary center',
-            selected: 1,
-            values: Map.fromEntries(gyms.asMap().entries.map(
-                  (entry) => MapEntry(entry.key + 1, entry.value.name),
-                )),
+            title: 'Primary Gym',
+            selected: 0,
+            values: ['None', ...gymList.map((e) => e.name).toList()].asMap(),
             leading: const IconWidget(
-              icon: Icons.add_location_sharp,
+              icon: Icons.location_on,
               color: Colors.pink,
             ),
             onChange: (primaryCenter) async {
@@ -47,11 +51,5 @@ class _PrimaryCenterSettingsState extends State<PrimaryCenterSettings> {
         }
       },
     );
-  }
-
-  Future<List<Gym>> _getGymList() async {
-    GymListState gymListState = GymListState();
-    gymListState.initState();
-    return gymListState.getGymList();
   }
 }

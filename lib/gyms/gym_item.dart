@@ -25,7 +25,7 @@ class GymItem extends StatelessWidget {
                   children: [
                     Text(gym.name,
                         style:
-                            const TextStyle(fontSize: 24, color: Colors.white)),
+                            const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600)),
                     const SizedBox(width: 8),
                     if (gym.isFavourite)
                       const Icon(Icons.favorite, color: Colors.white),

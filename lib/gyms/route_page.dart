@@ -58,7 +58,7 @@ class _RoutePageState extends State<RoutePage> {
                     Row(
                       children: [
                         FlutterSwitch(
-                          width: 160,
+                          width: 180,
                           inactiveText: "Not Completed",
                           activeText: "Completed!",
                           padding: 8,
@@ -80,7 +80,7 @@ class _RoutePageState extends State<RoutePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 5),
+                    const SizedBox(height: 3),
                     Tags(
                       tags: widget.route.tags,
                       color: widget.route.color,

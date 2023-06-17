@@ -7,6 +7,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'icon_widget.dart';
 import 'dark_mode_inherited_widget.dart';
 import '../gyms/gym.dart';
+import '../gyms/gym_list.dart';
 
 class SettingsPage extends StatefulWidget {
   static const keyDarkMode = 'key-dark-mode';
@@ -36,14 +37,13 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsGroup(
               title: 'GENERAL',
               children: <Widget>[
+                buildChoosePrimaryCenter(),
                 const SizedBox(height: 15),
                 buildDarkMode(),
                 const SizedBox(height: 12),
                 buildResetData(),
                 const SizedBox(height: 15),
                 buildHelpAndSupport(),
-                //TODO Handle choosing primary center
-                //buildChoosePrimaryCenter(),
               ],
             ),
           ],
@@ -52,19 +52,44 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget buildChoosePrimaryCenter() => DropDownSettingsTile(
-        settingKey: keyPrimaryCenter,
-        title: 'Choose primary center',
-        selected: 1,
-        values: const <int, String>{
-          1: 'Boulders',
-          2: 'Beta',
-          3: 'Boulders Valby',
-        },
-        leading: const IconWidget(
-            icon: Icons.add_location_sharp, color: Colors.pink),
-        onChange: (primaryCenter) {/*NOOb*/},
-      );
+   Widget buildChoosePrimaryCenter() {
+    return FutureBuilder<List<Gym>>(
+      future: _getGymList(), // Hent gymlisten fra Firebase
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          List<Gym> gyms = snapshot.data!;
+          return DropDownSettingsTile(
+            settingKey: keyPrimaryCenter,
+            title: 'Choose primary center',
+            selected: 1,
+            values: Map.fromEntries(gyms.asMap().entries.map(
+                  (entry) => MapEntry(entry.key + 1, entry.value.name),
+                )),
+            leading: const IconWidget(
+              icon: Icons.add_location_sharp,
+              color: Colors.pink,
+            ),
+            onChange: (primaryCenter) async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              prefs.setInt(keyPrimaryCenter, primaryCenter);
+            },
+          );
+        } else if (snapshot.hasError) {
+          return const Text(
+              'Error loading gyms'); // Håndter fejl i hentning af gymlisten
+        } else {
+          return const CircularProgressIndicator(); // Vis en indikator, mens gymlisten indlæses
+        }
+      },
+    );
+  }
+
+  Future<List<Gym>> _getGymList() async {
+    GymListState gymListState = GymListState();
+     gymListState.initState();
+    return gymListState.getGymList();
+  }
+
 
   Widget buildDarkMode() {
     return SwitchListTile(

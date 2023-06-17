@@ -7,8 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'icon_widget.dart';
 import 'dark_mode_inherited_widget.dart';
-import '../gyms/gym.dart';
-import '../gyms/gym_list.dart';
+import 'primary_center.dart';
 
 class SettingsPage extends StatefulWidget {
   static const keyDarkMode = 'key-dark-mode';
@@ -19,9 +18,8 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  static const keyPrimaryCenter = 'key-primaryCenter';
   bool isDarkMode = false;
-  List<Gym> gymList = []; //List to save gyms from firebase
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
             SettingsGroup(
               title: 'GENERAL',
               children: <Widget>[
-                buildChoosePrimaryCenter(),
+                const PrimaryCenterSettings(),
                 const SizedBox(height: 15),
                 buildDarkMode(),
                 const SizedBox(height: 12),
@@ -52,45 +50,6 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
-
-   Widget buildChoosePrimaryCenter() {
-    return FutureBuilder<List<Gym>>(
-      future: _getGymList(), // get gymList from firebase
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          List<Gym> gyms = snapshot.data!;
-          return DropDownSettingsTile(
-            settingKey: keyPrimaryCenter,
-            title: 'Choose primary center',
-            selected: 1,
-            values: Map.fromEntries(gyms.asMap().entries.map(
-                  (entry) => MapEntry(entry.key + 1, entry.value.name),
-                )),
-            leading: const IconWidget(
-              icon: Icons.add_location_sharp,
-              color: Colors.pink,
-            ),
-            onChange: (primaryCenter) async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.setInt(keyPrimaryCenter, primaryCenter);
-            },
-          );
-        } else if (snapshot.hasError) {
-          return const Text(
-              'Error loading gyms'); 
-        } else {
-          return const CircularProgressIndicator(); // show indicator while loading gymlist
-        }
-      },
-    );
-  }
-
-  Future<List<Gym>> _getGymList() async {
-    GymListState gymListState = GymListState();
-     gymListState.initState();
-    return gymListState.getGymList();
-  }
-
 
   Widget buildDarkMode() {
     return SwitchListTile(

@@ -52,25 +52,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Widget buildDarkMode() {
-    return SwitchListTile(
-      value: isDarkMode,
-      onChanged: (value) => toggleDarkMode(value),
-      title: const Text('Dark Mode'),
-      secondary:
-          const IconWidget(icon: Icons.dark_mode_outlined, color: Colors.pink),
-    );
-  }
-
-  void toggleDarkMode(bool value) {
-    final inheritedWidget = DarkModeInheritedWidget.of(context);
-    if (inheritedWidget != null) {
-      inheritedWidget.toggleDarkMode(value);
-      setState(() {
-        isDarkMode = value;
-      });
-    }
-  }
 
   Widget buildResetData() => SimpleSettingsTile(
         title: 'Reset Data',

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'icon_widget.dart';
 import 'dark_mode_inherited_widget.dart';
 import 'primary_center.dart';
+import 'help_and_support.dart';
 
 class SettingsPage extends StatefulWidget {
   static const keyDarkMode = 'key-dark-mode';
@@ -42,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 const SizedBox(height: 12),
                 buildResetData(),
                 const SizedBox(height: 15),
-                buildHelpAndSupport(),
+                const HelpAndSupportSettings(),
               ],
             ),
           ],
@@ -115,69 +115,4 @@ class _SettingsPageState extends State<SettingsPage> {
     SharedPreferences.getInstance().then((prefs) => prefs.clear());
     Phoenix.rebirth(context);
   }
-
-  Widget buildHelpAndSupport() => SimpleSettingsTile(
-      title: 'Help/Support',
-      subtitle: '',
-      leading: const IconWidget(
-          icon: Icons.headset_mic_outlined, color: Colors.pink),
-      onTap: () {
-        _showHelpAndSupportDialog();
-      },
-    );
-
-void _showHelpAndSupportDialog() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('Help and Support'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            InkWell(
-              onTap: () {
-                _launchPhone('+45 12345 5678'); 
-              },
-              child: const Text('Phone: +45 1234 5678'), 
-            ),
-            const SizedBox(height: 8),
-            InkWell(
-              onTap: () {
-                _launchEmail('support@example.com'); 
-              },
-              child: const Text('Email: support@example.com'), 
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Close'),
-          ),
-        ],
-      );
-    },
-  );
-}
-
-void _launchPhone(String phoneNumber) async {
-  final phoneUrl = 'tel:$phoneNumber';
-  if (await canLaunchUrl(phoneUrl as Uri)) {
-    await launchUrl(Uri.parse(phoneUrl));
-  } else {
-    throw 'Could not launch $phoneUrl';
-  }
-}
-
-void _launchEmail(String emailAddress) async {
-  final emailUrl = 'mailto:$emailAddress';
-  if (await canLaunchUrl(emailUrl as Uri)) {
-    await launchUrl(Uri.parse(emailUrl));
-  } else {
-    throw 'Could not launch $emailUrl';
-  }
-}
 }

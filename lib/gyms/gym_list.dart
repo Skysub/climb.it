@@ -37,7 +37,7 @@ class GymListState extends State<GymList> {
         child: FutureBuilder(
             future: gymFuture,
             builder: (context, gymSnapshot) {
-              if (gymSnapshot.hasData) {
+              if (gymSnapshot.hasData && gymSnapshot.connectionState == ConnectionState.done) {
                 List<Gym> gyms = gymSnapshot.data!;
                 return Padding(
                   padding: const EdgeInsets.all(10),

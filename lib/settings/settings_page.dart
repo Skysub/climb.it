@@ -1,3 +1,4 @@
+import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +28,7 @@ class _SettingsPageState extends State<SettingsPage> {
       isDarkMode = inheritedWidget.isDarkMode;
     }
     return Scaffold(
+      appBar: const MainAppBar(barTitle: 'Settings'),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(10),
@@ -99,19 +101,18 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Reset Data'),
-          content: const Text('Are you sure you want to reset your data?'),
+          content: const Text(
+              'Are you sure you want to reset your data?\n\nAll route progression and profile data will be lost!'),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pop(false); // Close the dialog 'false' (close)
+                Navigator.of(context).pop(false);
               },
               child: const Text('Close'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pop(true); // Close the dialog 'true' (accept)
+                Navigator.of(context).pop(true);
               },
               child: const Text('Accept'),
             ),
@@ -132,7 +133,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget buildHelpAndSupport() => SimpleSettingsTile(
         title: 'Help/Support',
-        subtitle: '',
         leading: const IconWidget(
             icon: Icons.headset_mic_outlined, color: Colors.pink),
         onTap: () {
@@ -145,12 +145,23 @@ class _SettingsPageState extends State<SettingsPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Help and Supoort'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
+          title: const Text('Help/Support'),
+          content: const Row(
             children: [
-              Text('TLF'),
-              Text('Mail'),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [Text('Email:'), Text('Tlf:')],
+              ),
+              SizedBox(width: 15),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('example@mail.com'),
+                  Text('+45 1234 5678'),
+                ],
+              )
             ],
           ),
           actions: [

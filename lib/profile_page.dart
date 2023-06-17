@@ -145,25 +145,39 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.pink,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Recently Visited Centres:',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Center(
+                            child: Text(
+                              'Most Visited Centres',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          for (var center in centers)
+                            Text(center,
+                                style: const TextStyle(color: Colors.white))
+                        ],
                       ),
-                      const SizedBox(height: 5),
-                      for (var center in centers)
-                        Text(center,
-                            style: const TextStyle(color: Colors.white))
-                    ],
-                  ),
+                    ),
+                    const Positioned(
+                      right: 450,
+                      top: 5,
+                      child: Icon(
+                        Icons.house,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 15),
@@ -173,25 +187,39 @@ class _ProfilePageState extends State<ProfilePage> {
                   color: Colors.pink,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Recently Visited Centres:',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Center(
+                            child: Text(
+                              'Recently Visited Centres',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          for (var center in centers.reversed)
+                            Text(center,
+                                style: const TextStyle(color: Colors.white)),
+                        ],
                       ),
-                      const SizedBox(height: 5),
-                      for (var center in centers.reversed)
-                        Text(center,
-                            style: const TextStyle(color: Colors.white))
-                    ],
-                  ),
+                    ),
+                    const Positioned(
+                      right: 450,
+                      top: 5,
+                      child: Icon(
+                        Icons.access_time,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

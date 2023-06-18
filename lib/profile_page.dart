@@ -95,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Spacer(),
                   Text(
                     profileName,
                     style: const TextStyle(
@@ -102,24 +103,25 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  InkWell(
-                    onTap: () {
-                      _showChangeNameDialog();
-                    },
-                    child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.pink,
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          size: 16,
-                          color: Colors.white,
-                        )),
-                  ),
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        _showChangeNameDialog();
+                      },
+                      child: Container(
+                          width: 30,
+                          height: 30,
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.pink,
+                          ),
+                          child: const Icon(
+                            Icons.edit,
+                            size: 16,
+                            color: Colors.white,
+                          )),
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 30),

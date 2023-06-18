@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/tags.dart';
 import 'package:climb_it/main_app_bar.dart';
+import 'package:customizable_counter/customizable_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -105,6 +106,27 @@ class _RoutePageState extends State<RoutePage> {
                             onPressed: () => {showHintSelector()},
                             child: const Text("Need A Hint?")),
                       ),
+                    CustomizableCounter(
+                      buttonText: "Click to add attempt",
+                      borderRadius: 100,
+                      borderColor: Colors.pink,
+                      incrementIcon: const Icon(Icons.arrow_upward_outlined, color: Colors.green,),
+                      decrementIcon: const Icon(Icons.arrow_downward_outlined, color: Colors.red,),
+                      textSize: 14,
+
+                      minCount: 0,
+                      maxCount: double.infinity,
+                      step: 1,
+                      count: attemptCounter, //TODO needs to be saved
+
+                      //TODO only able to increment the counter when the route is not completed. Same for decrement
+                      /* onIncrement: (count){
+                        if(ClimbingRoute.isCompleted == false) {
+                          attemptCounter++;
+                        }
+                      }, */
+
+                    )
                   ],
                 ),
               ),

@@ -22,6 +22,7 @@ dependencies:
   image_picker: ^0.8.9
   url_launcher: ^6.1.11
   flutter_launcher_icons: ^0.13.1
+  customizable_counter: ^1.0.4
 
 
 dev_dependencies:

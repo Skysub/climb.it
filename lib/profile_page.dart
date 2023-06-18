@@ -315,13 +315,33 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       },
     );
-    if (newName != '' && newName != null) {
+    if (newName != '' && newName != null && newName.length < 20) {
       setState(() {
         profileName = newName;
       });
       var prefs = await SharedPreferences.getInstance();
       prefs.setString('profile_name', profileName);
+    } else {
+      _showNameInputError();
     }
+  }
+
+  void _showNameInputError() async {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Center(child: Text("Name Error")),
+        content: const Text(
+            "Remember the name has to be less than 20 signs and can't be empty"),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+      barrierDismissible: true,
+    );
   }
 
   _getFromGallery() async {

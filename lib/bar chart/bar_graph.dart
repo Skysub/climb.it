@@ -31,6 +31,7 @@ class MyBarGraph extends StatelessWidget {
                 const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             bottomTitles: const AxisTitles(
               sideTitles: SideTitles(
+                reservedSize: 26,
                 showTitles: true,
                 getTitlesWidget: getBottomTitles,
               ),

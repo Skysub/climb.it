@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/tags.dart';
 import 'package:climb_it/main_app_bar.dart';
+import 'package:customizable_counter/customizable_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -60,13 +61,22 @@ class _RoutePageState extends State<RoutePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CachedNetworkImage(
-                imageUrl: widget.route.imageUrl,
-                placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.route.imageUrl,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,12 +106,10 @@ class _RoutePageState extends State<RoutePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 3),
                     Tags(
                       tags: widget.route.tags,
                       color: widget.route.color,
                     ),
-                    const SizedBox(height: 10),
                     if (widget.route.hints.isNotEmpty)
                       Center(
                         child: OutlinedButton(
@@ -114,6 +122,27 @@ class _RoutePageState extends State<RoutePage> {
                             onPressed: () => {showHintSelector()},
                             child: const Text("Need A Hint?")),
                       ),
+                    CustomizableCounter(
+                      buttonText: "Click to add attempt",
+                      borderRadius: 100,
+                      borderColor: Colors.pink,
+                      incrementIcon: const Icon(Icons.arrow_upward_outlined, color: Colors.green,),
+                      decrementIcon: const Icon(Icons.arrow_downward_outlined, color: Colors.red,),
+                      textSize: 14,
+
+                      minCount: 0,
+                      maxCount: double.infinity,
+                      step: 1,
+                      count: attemptCounter, //TODO needs to be saved
+
+                      //TODO only able to increment the counter when the route is not completed. Same for decrement
+                      /* onIncrement: (count){
+                        if(ClimbingRoute.isCompleted == false) {
+                          attemptCounter++;
+                        }
+                      }, */
+
+                    )
                   ],
                 ),
               ),

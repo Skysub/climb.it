@@ -95,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  const Spacer(),
                   Text(
                     profileName,
                     style: const TextStyle(
@@ -102,24 +103,33 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  InkWell(
-                    onTap: () {
-                      _showChangeNameDialog();
-                    },
-                    child: Container(
-                        width: 30,
-                        height: 30,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.pink,
+                  Expanded(
+                    child: InkWell(
+                      onTap: () {
+                        _showChangeNameDialog();
+                      },
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            Container(
+                                width: 30,
+                                height: 30,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.pink,
+                                ),
+                                child: const Icon(
+                                  Icons.edit,
+                                  size: 16,
+                                  color: Colors.white,
+                                )),
+                          ],
                         ),
-                        child: const Icon(
-                          Icons.edit,
-                          size: 16,
-                          color: Colors.white,
-                        )),
-                  ),
+                      ),
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 30),
@@ -234,6 +244,38 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
+              const SizedBox(height: 15),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              'Your total attempts',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text("42"), //TODO get all routes numer of attempts
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -273,13 +315,33 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       },
     );
-    if (newName != '' && newName != null) {
+    if (newName != '' && newName != null && newName.length < 20) {
       setState(() {
         profileName = newName;
       });
       var prefs = await SharedPreferences.getInstance();
       prefs.setString('profile_name', profileName);
+    } else {
+      _showNameInputError();
     }
+  }
+
+  void _showNameInputError() async {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Center(child: Text("Name Error")),
+        content: const Text(
+            "Remember the name has to be less than 20 signs and can't be empty"),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'OK'),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+      barrierDismissible: true,
+    );
   }
 
   _getFromGallery() async {

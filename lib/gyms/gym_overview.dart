@@ -19,8 +19,6 @@ class GymOverview extends StatefulWidget {
   State<GymOverview> createState() => GymOverviewState();
 }
 
-enum RouteSortMode { grade, name }
-
 enum CompletionSortMode {
   any,
   completed,
@@ -59,9 +57,8 @@ class GymOverviewState extends State<GymOverview> {
   List<ClimbingRoute> displayedRoutes = [];
   List<ClimbingRoute> routes = [];
 
-  RouteSortMode sortMode = RouteSortMode.grade;
   CompletionSortMode completeMode = CompletionSortMode.any;
-  bool sortDescending = false;
+  bool sortGradeDescending = false;
 
   Set<String> tagFilters = {};
   Map<String, dynamic> completedMap = {};
@@ -84,19 +81,21 @@ class GymOverviewState extends State<GymOverview> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(children: [
-                SortChip(
-                    selectedSortMode: sortMode,
-                    sortMode: RouteSortMode.grade,
-                    label: 'Grade',
-                    sortDescending: sortDescending,
-                    callback: () => changeSorting(RouteSortMode.grade)),
-                const SizedBox(width: 10),
-                SortChip(
-                    selectedSortMode: sortMode,
-                    sortMode: RouteSortMode.name,
-                    label: 'Name',
-                    sortDescending: sortDescending,
-                    callback: () => changeSorting(RouteSortMode.name)),
+                ActionChip(
+                    label: const Text('Grade',
+                        style: TextStyle(color: Colors.white)),
+                    backgroundColor: Colors.pink,
+                    avatar: Icon(
+                        sortGradeDescending
+                            ? Icons.arrow_downward_rounded
+                            : Icons.arrow_upward_rounded,
+                        color: Colors.white),
+                    onPressed: () {
+                      setState(() {
+                        sortGradeDescending = !sortGradeDescending;
+                        sortRoutes();
+                      });
+                    }),
                 Expanded(
                     child: Align(
                         alignment: Alignment.centerRight,
@@ -300,14 +299,6 @@ class GymOverviewState extends State<GymOverview> {
 
   void updateRouteCompleted() {}
 
-  void changeSorting(RouteSortMode clickedMode) {
-    setState(() {
-      sortDescending = sortMode == clickedMode && !sortDescending;
-      sortMode = clickedMode;
-      sortRoutes();
-    });
-  }
-
   void sortRoutes() {
     // Save all routes in displayedRoutes
     displayedRoutes = routes;
@@ -328,17 +319,10 @@ class GymOverviewState extends State<GymOverview> {
     }
 
     // Sort remaining routes
-    switch (sortMode) {
-      case RouteSortMode.grade:
-        displayedRoutes.sort((a, b) => a.difficulty.compareTo(b.difficulty));
-        break;
-      case RouteSortMode.name:
-        displayedRoutes.sort((a, b) => a.name.compareTo(b.name));
-        break;
-    }
+    displayedRoutes.sort((a, b) => a.difficulty.compareTo(b.difficulty));
 
     // Set sort order
-    if (sortDescending) {
+    if (sortGradeDescending) {
       displayedRoutes = displayedRoutes.reversed.toList();
     }
   }
@@ -351,38 +335,5 @@ class GymOverviewState extends State<GymOverview> {
     List<String> tagList = tagSet.toList();
     tagList.sort();
     return tagList;
-  }
-}
-
-class SortChip extends StatelessWidget {
-  const SortChip(
-      {super.key,
-      required this.selectedSortMode,
-      required this.sortMode,
-      required this.label,
-      required this.sortDescending,
-      required this.callback});
-
-  final RouteSortMode selectedSortMode;
-  final RouteSortMode sortMode;
-  final String label;
-  final bool sortDescending;
-  final VoidCallback callback;
-
-  @override
-  Widget build(BuildContext context) {
-    return ActionChip(
-        backgroundColor: selectedSortMode == sortMode ? Colors.pink : null,
-        avatar: selectedSortMode == sortMode
-            ? Icon(
-                sortDescending
-                    ? Icons.arrow_downward_rounded
-                    : Icons.arrow_upward_rounded,
-                color: Colors.white)
-            : null,
-        label: Text(label,
-            style: TextStyle(
-                color: selectedSortMode == sortMode ? Colors.white : null)),
-        onPressed: callback);
   }
 }

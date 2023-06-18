@@ -44,13 +44,22 @@ class _RoutePageState extends State<RoutePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CachedNetworkImage(
-                imageUrl: widget.route.imageUrl,
-                placeholder: (context, url) =>
-                    const Center(child: CircularProgressIndicator()),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.route.imageUrl,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
               ),
               Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.only(
+                  left: 10,
+                  right: 10,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,12 +89,10 @@ class _RoutePageState extends State<RoutePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 3),
                     Tags(
                       tags: widget.route.tags,
                       color: widget.route.color,
                     ),
-                    const SizedBox(height: 10),
                     if (widget.route.hints.isNotEmpty)
                       Center(
                         child: OutlinedButton(

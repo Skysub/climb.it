@@ -126,8 +126,14 @@ class _RoutePageState extends State<RoutePage> {
                       buttonText: "Click to add attempt",
                       borderRadius: 100,
                       borderColor: Colors.pink,
-                      incrementIcon: const Icon(Icons.arrow_upward_outlined, color: Colors.green,),
-                      decrementIcon: const Icon(Icons.arrow_downward_outlined, color: Colors.red,),
+                      incrementIcon: const Icon(
+                        Icons.arrow_upward_outlined,
+                        color: Colors.green,
+                      ),
+                      decrementIcon: const Icon(
+                        Icons.arrow_downward_outlined,
+                        color: Colors.red,
+                      ),
                       textSize: 14,
 
                       minCount: 0,
@@ -141,7 +147,6 @@ class _RoutePageState extends State<RoutePage> {
                           attemptCounter++;
                         }
                       }, */
-
                     )
                   ],
                 ),
@@ -242,7 +247,7 @@ class _RoutePageState extends State<RoutePage> {
 
       case HintType.video:
         //TODO: Make UI good
-        return Column(children: [
+        return Column(mainAxisSize: MainAxisSize.min, children: [
           FutureBuilder(
               future: initVideoPlayerFutures[hint.data],
               builder: (context, snapshot) {
@@ -260,17 +265,24 @@ class _RoutePageState extends State<RoutePage> {
                   );
                 }
               }),
-          FloatingActionButton(
-            onPressed: () {
-              setState(() {
-                if (videoHintControllers[hint.data]!.value.isPlaying) {
-                  videoHintControllers[hint.data]!.pause();
-                } else {
-                  videoHintControllers[hint.data]!.play();
-                }
-              });
-            },
-          )
+          Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: FloatingActionButton(
+                child: const Icon(
+                  Icons.play_arrow_sharp,
+                  color: Colors.white,
+                  size: 40,
+                ),
+                onPressed: () {
+                  setState(() {
+                    if (videoHintControllers[hint.data]!.value.isPlaying) {
+                      videoHintControllers[hint.data]!.pause();
+                    } else {
+                      videoHintControllers[hint.data]!.play();
+                    }
+                  });
+                },
+              ))
         ]);
     }
   }

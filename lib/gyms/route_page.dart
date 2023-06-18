@@ -246,7 +246,6 @@ class _RoutePageState extends State<RoutePage> {
                 const Center(child: CircularProgressIndicator()));
 
       case HintType.video:
-        //TODO: Make UI good
         return Column(mainAxisSize: MainAxisSize.min, children: [
           FutureBuilder(
               future: initVideoPlayerFutures[hint.data],

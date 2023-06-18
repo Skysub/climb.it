@@ -123,70 +123,7 @@ class GymOverviewState extends State<GymOverview> {
                                           : null)),
                               backgroundColor:
                                   tagFilters.isEmpty ? null : Colors.pink,
-                              //TODO Extract Dialog to separate Widget
-                              onPressed: () => showDialog(
-                                      context: context,
-                                      builder: (context) => StatefulBuilder(
-                                            builder: (context, setState) =>
-                                                Dialog(
-                                                    child: Padding(
-                                              padding: const EdgeInsets.all(10),
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Wrap(
-                                                    spacing: 5,
-                                                    children: [
-                                                      for (String tag
-                                                          in getAllTags())
-                                                        FilterChip(
-                                                            elevation: 3,
-                                                            checkmarkColor:
-                                                                Colors.white,
-                                                            selectedColor:
-                                                                Colors.pink,
-                                                            label: Text(tag,
-                                                                style: TextStyle(
-                                                                    color: tagFilters.contains(
-                                                                            tag)
-                                                                        ? Colors
-                                                                            .white
-                                                                        : null)),
-                                                            selected: tagFilters
-                                                                .contains(tag),
-                                                            onSelected:
-                                                                (selected) {
-                                                              setState(() {
-                                                                if (selected) {
-                                                                  tagFilters
-                                                                      .add(tag);
-                                                                } else {
-                                                                  tagFilters
-                                                                      .remove(
-                                                                          tag);
-                                                                }
-                                                              });
-                                                            })
-                                                    ],
-                                                  ),
-                                                  TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child: const Text('Close',
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.pink)))
-                                                ],
-                                              ),
-                                            )),
-                                          )).then((value) {
-                                    setState(() {
-                                      sortRoutes();
-                                    });
-                                  })),
+                              onPressed: () => showTagDialog()),
                         ])))
               ]),
               const SizedBox(height: 10),
@@ -235,6 +172,58 @@ class GymOverviewState extends State<GymOverview> {
         ),
       ),
     );
+  }
+
+  showTagDialog() {
+    showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(
+              builder: (context, setState) => Dialog(
+                  child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Wrap(
+                      spacing: 5,
+                      children: [
+                        for (String tag in getAllTags())
+                          FilterChip(
+                              elevation: 3,
+                              checkmarkColor: Colors.white,
+                              selectedColor: Colors.pink,
+                              label: Text(tag,
+                                  style: TextStyle(
+                                      color: tagFilters.contains(tag)
+                                          ? Colors.white
+                                          : null)),
+                              selected: tagFilters.contains(tag),
+                              onSelected: (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    tagFilters.add(tag);
+                                  } else {
+                                    tagFilters.remove(tag);
+                                  }
+                                });
+                              })
+                      ],
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Close',
+                            style: TextStyle(color: Colors.pink)))
+                  ],
+                ),
+              )),
+            )).then((value) {
+      setState(() {
+        sortRoutes();
+      });
+    });
   }
 
   Future<void> updateRouteList() async {

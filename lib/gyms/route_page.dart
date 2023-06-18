@@ -23,11 +23,27 @@ class RoutePage extends StatefulWidget {
 class _RoutePageState extends State<RoutePage> {
   late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
+  Map<String, Future<void>> initVideoPlayerFutures = {};
+  late Map<String, VideoPlayerController> videoHintControllers;
   double attemptCounter = 0;
 
   @override
   void initState() {
-    // TODO Choose video from hint if available
+    //We start by preloading all the hint videos for this route if applicable
+    var videoHints =
+        widget.route.hints.where((e) => e.type == HintType.video).toList();
+    //Grimt udtryk nedenunder, kig væk!
+    videoHintControllers = Map<String, VideoPlayerController>.fromEntries(
+        Iterable<MapEntry<String, VideoPlayerController>>.generate(
+            videoHints.length,
+            (i) => MapEntry<String, VideoPlayerController>(videoHints[i].data,
+                VideoPlayerController.network(videoHints[i].data))));
+    videoHintControllers.forEach((key, value) {
+      initVideoPlayerFutures.putIfAbsent(key, () => value.initialize());
+      value.setLooping(false);
+      value.setVolume(1.0);
+    });
+
     _controller = VideoPlayerController.network(
         "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4");
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -139,6 +155,7 @@ class _RoutePageState extends State<RoutePage> {
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
+                scrollable: true,
                 title: const Text("Choose a hint"),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -150,7 +167,28 @@ class _RoutePageState extends State<RoutePage> {
                             child: Text(widget.route.hints[i].name),
                             onPressed: () {
                               Navigator.pop(context);
-                              showHint(widget.route.hints[i]);
+                              showDialog(
+                                  traversalEdgeBehavior:
+                                      TraversalEdgeBehavior.closedLoop,
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                          title:
+                                              Text(widget.route.hints[i].name),
+                                          content: getHintContentWidget(
+                                              widget.route.hints[i]),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context, 'OK'),
+                                              child: const Text('OK'),
+                                            ),
+                                          ])).whenComplete(() =>
+                                  videoHintControllers.forEach((key, value) {
+                                    if (value.value.isPlaying) {
+                                      value.pause();
+                                    }
+                                  }));
                             },
                           )),
                 ),
@@ -162,40 +200,49 @@ class _RoutePageState extends State<RoutePage> {
                 ]));
   }
 
-  showHint(Hint hint) async {
+  Widget getHintContentWidget(Hint hint) {
     switch (hint.type) {
       case HintType.text:
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-                    title: Text(hint.name),
-                    content: Text(hint.data),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ]));
-        break;
+        return Text(hint.data);
+
       case HintType.image:
-        showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-                    title: Text(hint.name),
-                    content: CachedNetworkImage(
-                        imageUrl: hint.data,
-                        placeholder: (context, url) =>
-                            const Center(child: CircularProgressIndicator())),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, 'OK'),
-                        child: const Text('OK'),
-                      ),
-                    ]));
-        break;
+        return CachedNetworkImage(
+            imageUrl: hint.data,
+            placeholder: (context, url) =>
+                const Center(child: CircularProgressIndicator()));
+
       case HintType.video:
-        // TODO Handle video hint
-        break;
+        //TODO: Make UI good
+        return Column(children: [
+          FutureBuilder(
+              future: initVideoPlayerFutures[hint.data],
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Center(
+                      child: AspectRatio(
+                          aspectRatio: videoHintControllers[hint.data]!
+                              .value
+                              .aspectRatio,
+                          child:
+                              VideoPlayer(videoHintControllers[hint.data]!)));
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                if (videoHintControllers[hint.data]!.value.isPlaying) {
+                  videoHintControllers[hint.data]!.pause();
+                } else {
+                  videoHintControllers[hint.data]!.play();
+                }
+              });
+            },
+          )
+        ]);
     }
   }
 }

@@ -8,22 +8,18 @@ class HelpAndSupportSettings extends StatelessWidget {
   const HelpAndSupportSettings({Key? key}) : super(key: key);
 
   void _launchPhone(String phoneNumber) async {
-  final phoneUrl = 'tel:$phoneNumber';
-  if (await canLaunchUrl(phoneUrl as Uri)) {
-    await launchUrl(Uri.parse(phoneUrl));
-  } else {
-    throw 'Could not launch $phoneUrl';
+    final phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    try {
+      await launchUrl(phoneUri);
+    } finally {}
   }
-}
 
-void _launchEmail(String emailAddress) async {
-  final emailUrl = 'mailto:$emailAddress';
-  if (await canLaunchUrl(emailUrl as Uri)) {
-    await launchUrl(Uri.parse(emailUrl));
-  } else {
-    throw 'Could not launch $emailUrl';
+  void _launchEmail(String emailAddress) async {
+    final emailUrl = 'mailto:$emailAddress';
+    try {
+      await launchUrl(Uri.parse(emailUrl));
+    } finally {}
   }
-}
 
   @override
   Widget build(BuildContext context) {

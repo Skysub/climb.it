@@ -45,7 +45,7 @@ class ClimbingRoute {
       case 'green':
         return Colors.green;
       case 'yellow':
-        return Colors.yellow;
+        return Colors.yellow[700]!;
       case 'orange':
         return Colors.orange;
       case 'blue':

@@ -1,3 +1,4 @@
+import 'package:climb_it/gyms/climbing_route.dart';
 import 'package:climb_it/gyms/gym.dart';
 import 'package:climb_it/location/location_manager.dart';
 import 'package:collection/collection.dart';
@@ -45,5 +46,21 @@ class FirebaseManager {
     }
 
     return gymList;
+  }
+
+  static Future<List<ClimbingRoute>> loadRoutes(String gymKey) async {
+    var data = await FirebaseDatabase.instance
+        .ref()
+        .child('routes')
+        .child(gymKey)
+        .once();
+    return data.snapshot.children
+        .map((e) => ClimbingRoute.fromJSON(
+            e.value as Map,
+            e.child('hints').value == null
+                ? null
+                : e.child('hints').value as Map,
+            e.key ?? ''))
+        .toList();
   }
 }

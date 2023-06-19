@@ -39,6 +39,7 @@ class _RoutePageState extends State<RoutePage> {
             videoHints.length,
             (i) => MapEntry<String, VideoPlayerController>(videoHints[i].data,
                 VideoPlayerController.network(videoHints[i].data))));
+
     videoHintControllers.forEach((key, value) {
       initVideoPlayerFutures.putIfAbsent(key, () => value.initialize());
       value.setLooping(false);
@@ -186,6 +187,26 @@ class _RoutePageState extends State<RoutePage> {
   }
 
   showHintSelector() {
+    if (widget.route.hints.length == 1) {
+      showDialog(
+              traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                      title: Text(widget.route.hints[0].name),
+                      content: getHintContentWidget(widget.route.hints[0]),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ]))
+          .whenComplete(() => videoHintControllers.forEach((key, value) {
+                if (value.value.isPlaying) {
+                  value.pause();
+                }
+              }));
+      return;
+    }
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -246,6 +267,15 @@ class _RoutePageState extends State<RoutePage> {
                 const Center(child: CircularProgressIndicator()));
 
       case HintType.video:
+        if (videoHintControllers[hint.data] == null) {
+          return const Text("Video error");
+        }
+        VideoPlayerController hintVid = videoHintControllers[hint.data]!;
+        initVideoPlayerFutures.putIfAbsent(
+            hint.data, () => hintVid.initialize());
+        hintVid.setLooping(false);
+        hintVid.setVolume(1.0);
+
         return Column(mainAxisSize: MainAxisSize.min, children: [
           FutureBuilder(
               future: initVideoPlayerFutures[hint.data],
@@ -265,7 +295,7 @@ class _RoutePageState extends State<RoutePage> {
                 }
               }),
           Padding(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: FloatingActionButton(
                 child: const Icon(
                   Icons.play_arrow_sharp,

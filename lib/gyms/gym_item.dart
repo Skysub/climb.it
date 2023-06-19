@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'gym.dart';
 
@@ -24,20 +25,33 @@ class GymItem extends StatelessWidget {
                 Row(
                   children: [
                     Text(gym.name,
-                        style:
-                            const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w600)),
+                        style: const TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600)),
                     const SizedBox(width: 8),
                     if (gym.isFavourite)
                       const Icon(Icons.favorite, color: Colors.white),
                   ],
                 ),
-                if (gym.distanceKm != null)
-                  Column(children: [
+                GestureDetector(
+                  onTap: () async {
+                    try {
+                      String query = Uri.decodeComponent(gym.name);
+                      await launchUrl(
+                          Uri.parse(
+                              'https://www.google.com/maps/search/?api=1&query=$query'),
+                          mode: LaunchMode.externalApplication);
+                    } finally {}
+                  },
+                  child: Column(children: [
                     const Icon(Icons.location_on, color: Colors.white),
-                    const SizedBox(height: 3),
-                    Text("${gym.distanceKm!.toStringAsFixed(1)} km",
-                        style: const TextStyle(color: Colors.white)),
+                    if (gym.distanceKm != null) const SizedBox(height: 3),
+                    if (gym.distanceKm != null)
+                      Text("${gym.distanceKm!.toStringAsFixed(1)} km",
+                          style: const TextStyle(color: Colors.white)),
                   ]),
+                ),
               ],
             )),
       ),

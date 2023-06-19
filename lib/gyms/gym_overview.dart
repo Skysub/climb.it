@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:climb_it/firebase/firebase_manager.dart';
 import 'package:climb_it/gyms/route_item.dart';
 import 'package:climb_it/gyms/route_page.dart';
 import 'package:climb_it/main_app_bar.dart';
@@ -66,7 +67,7 @@ class GymOverviewState extends State<GymOverview> {
   @override
   void initState() {
     super.initState();
-    routeFuture = getRouteData();
+    routeFuture = loadRoutes();
   }
 
   @override
@@ -228,25 +229,12 @@ class GymOverviewState extends State<GymOverview> {
 
   Future<void> updateRouteList() async {
     setState(() {
-      routeFuture = getRouteData();
+      routeFuture = loadRoutes();
     });
   }
 
-  Future<List<ClimbingRoute>> getRouteData() async {
-    // Load Firebase data
-    var data = await FirebaseDatabase.instance
-        .ref()
-        .child('routes')
-        .child(widget.gym.key)
-        .once();
-    routes = data.snapshot.children
-        .map((e) => ClimbingRoute.fromJSON(
-            e.value as Map,
-            e.child('hints').value == null
-                ? null
-                : e.child('hints').value as Map,
-            e.key ?? ''))
-        .toList();
+  Future<List<ClimbingRoute>> loadRoutes() async {
+    routes = await FirebaseManager.loadRoutes(widget.gym.key);
 
     // Load completed routes map from shared_preferences
     SharedPreferences prefs = await SharedPreferences.getInstance();

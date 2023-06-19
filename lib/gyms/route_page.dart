@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:climb_it/gyms/tags.dart';
 import 'package:climb_it/main_app_bar.dart';
-import 'package:customizable_counter/customizable_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -9,7 +8,7 @@ import 'package:flutter_switch/flutter_switch.dart';
 import 'climbing_route.dart';
 import 'hint.dart';
 
-typedef CompletedCallback = void Function(ClimbingRoute, bool);
+typedef CompletedCallback = void Function(ClimbingRoute);
 
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key, required this.route, required this.callback});
@@ -22,11 +21,8 @@ class RoutePage extends StatefulWidget {
 }
 
 class _RoutePageState extends State<RoutePage> {
-  late VideoPlayerController _controller;
-  late Future<void> _initializeVideoPlayerFuture;
   Map<String, Future<void>> initVideoPlayerFutures = {};
   late Map<String, VideoPlayerController> videoHintControllers;
-  double attemptCounter = 0;
 
   @override
   void initState() {
@@ -46,11 +42,6 @@ class _RoutePageState extends State<RoutePage> {
       value.setVolume(1.0);
     });
 
-    _controller = VideoPlayerController.network(
-        "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4");
-    _initializeVideoPlayerFuture = _controller.initialize();
-    _controller.setLooping(true);
-    _controller.setVolume(1.0);
     super.initState();
   }
 
@@ -101,7 +92,7 @@ class _RoutePageState extends State<RoutePage> {
                           onToggle: (val) {
                             setState(() {
                               widget.route.isCompleted = val;
-                              widget.callback(widget.route, val);
+                              widget.callback(widget.route);
                             });
                           },
                         ),
@@ -123,62 +114,9 @@ class _RoutePageState extends State<RoutePage> {
                             onPressed: () => {showHintSelector()},
                             child: const Text("Need A Hint?")),
                       ),
-                    CustomizableCounter(
-                      buttonText: "Click to add attempt",
-                      borderRadius: 100,
-                      borderColor: Colors.pink,
-                      incrementIcon: const Icon(
-                        Icons.arrow_upward_outlined,
-                        color: Colors.green,
-                      ),
-                      decrementIcon: const Icon(
-                        Icons.arrow_downward_outlined,
-                        color: Colors.red,
-                      ),
-                      textSize: 14,
-
-                      minCount: 0,
-                      maxCount: double.infinity,
-                      step: 1,
-                      count: attemptCounter, //TODO needs to be saved
-
-                      //TODO only able to increment the counter when the route is not completed. Same for decrement
-                      /* onIncrement: (count){
-                        if(ClimbingRoute.isCompleted == false) {
-                          attemptCounter++;
-                        }
-                      }, */
-                    )
                   ],
                 ),
               ),
-              // TODO Move video player
-              // FutureBuilder(
-              //     future: _initializeVideoPlayerFuture,
-              //     builder: (context, snapshot) {
-              //       if (snapshot.connectionState == ConnectionState.done) {
-              //         return Center(
-              //           child: AspectRatio(
-              //               aspectRatio: _controller.value.aspectRatio,
-              //               child: VideoPlayer(_controller)),
-              //         );
-              //       } else {
-              //         return const Center(
-              //           child: CircularProgressIndicator(),
-              //         );
-              //       }
-              //     }),
-              // FloatingActionButton(
-              //   onPressed: () {
-              //     setState(() {
-              //       if (_controller.value.isPlaying) {
-              //         _controller.pause();
-              //       } else {
-              //         _controller.play();
-              //       }
-              //     });
-              //   },
-              // ),
             ],
           ),
         ),

@@ -16,13 +16,11 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   String profileName = 'Profile Name';
-
   Image profileImage =
       Image.asset('assets/defaultprofile.png', fit: BoxFit.cover);
   ImagePicker imagePicker = ImagePicker();
 
   final List<double> vAmounts = [0, 0, 0, 0, 0, 0, 0, 0];
-  final List<String> centers = ['Center1', 'Center2', 'Center3'];
 
   @override
   void initState() {
@@ -164,116 +162,36 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.pink,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Center(
-                            child: Text(
-                              'Most Visited Centres',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          for (var center in centers)
-                            Text(center,
-                                style: const TextStyle(color: Colors.white))
-                        ],
-                      ),
-                    ),
-                    const Positioned(
-                      right: 450,
-                      top: 5,
-                      child: Icon(
-                        Icons.house,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.pink,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Stack(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Center(
-                            child: Text(
-                              'Recently Visited Centres',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          for (var center in centers.reversed)
-                            Text(center,
-                                style: const TextStyle(color: Colors.white)),
-                        ],
-                      ),
-                    ),
-                    const Positioned(
-                      right: 450,
-                      top: 5,
-                      child: Icon(
-                        Icons.access_time,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
                   color: Colors.deepOrange,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Stack(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: Text(
-                              'Your total attempts',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          SizedBox(height: 5),
-                          Text("42"), //TODO get all routes numer of attempts
-                        ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Center(
+                        child: Text(
+                          'Total completions',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 5),
+                      FutureBuilder(
+                          future: _loadAmounts(),
+                          builder: ((context, snapshot) {
+                            bool done = snapshot.connectionState ==
+                                ConnectionState.done;
+                            return Text(done ? "${vAmounts.fold(0, (p, c) => (p + c).toInt())}" : "0",
+                                style: const TextStyle(
+                                    fontSize: 16, color: Colors.white));
+                          }))
+                    ],
+                  ),
                 ),
               ),
             ],

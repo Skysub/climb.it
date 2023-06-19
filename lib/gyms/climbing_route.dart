@@ -10,7 +10,7 @@ class ClimbingRoute {
   final List<String> tags;
   final Color color;
   final List<Hint> hints;
-  bool isCompleted;
+  bool isCompleted = false;
 
   ClimbingRoute(
       {required this.key,
@@ -19,11 +19,10 @@ class ClimbingRoute {
       required this.imageUrl,
       required this.tags,
       required this.color,
-      required this.hints,
-      required this.isCompleted});
+      required this.hints});
 
-  static ClimbingRoute fromJSON(
-      Map<dynamic, dynamic> json, Map<dynamic, dynamic>? hintsJSON, String key) {
+  static ClimbingRoute fromJSON(Map<dynamic, dynamic> json,
+      Map<dynamic, dynamic>? hintsJSON, String key) {
     return ClimbingRoute(
         key: key,
         name: json['name'],
@@ -32,7 +31,6 @@ class ClimbingRoute {
             'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
         tags: json['tags'] != null ? json['tags'].split(';') : [],
         color: getColor(json['color']),
-        isCompleted: false,
         hints: hintsJSON != null
             ? List.generate(hintsJSON.length,
                 (index) => Hint.fromJSON(hintsJSON['hint${index + 1}']))

@@ -6,7 +6,6 @@ import 'package:climb_it/gyms/route_item.dart';
 import 'package:climb_it/gyms/route_page.dart';
 import 'package:climb_it/main_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'climbing_route.dart';
@@ -246,11 +245,11 @@ class GymOverviewState extends State<GymOverview> {
     return routes;
   }
 
-  changeCompletedStatus(ClimbingRoute route, bool isCompleted) async {
+  changeCompletedStatus(ClimbingRoute route) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      if (isCompleted) {
-        completedMap[route.key] = isCompleted;
+      if (route.isCompleted) {
+        completedMap[route.key] = route.isCompleted;
         prefs.setInt('V${route.difficulty}',
             (prefs.getInt('V${route.difficulty}') ?? 0) + 1);
       } else {

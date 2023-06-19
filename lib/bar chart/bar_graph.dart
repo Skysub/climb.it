@@ -15,11 +15,10 @@ class MyBarGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     BarData myBarData = BarData(amounts: amounts);
     myBarData.initializeBarData();
-
     return BarChart(
       BarChartData(
         barTouchData: BarTouchData(enabled: false),
-        maxY: amounts.reduce(max),
+        maxY: (amounts.reduce(max) / 5).ceil() * 5,
         minY: 0,
         gridData: const FlGridData(show: false),
         borderData: FlBorderData(show: false),
@@ -38,8 +37,12 @@ class MyBarGraph extends StatelessWidget {
             ),
             leftTitles: AxisTitles(
                 sideTitles: SideTitles(
+                    reservedSize: 40,
                     showTitles: true,
-                    interval: max(1, (amounts.reduce(max) ~/ 4).toDouble())))),
+                    interval: max(
+                        1,
+                        (((amounts.reduce(max) / 5).ceil() * 5) ~/ 5)
+                            .toDouble())))),
         barGroups: myBarData.barData
             .map(
               (data) => BarChartGroupData(

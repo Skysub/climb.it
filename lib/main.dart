@@ -113,7 +113,7 @@ class _HomeState extends State<Home> {
   _selectTab(int index) {
     setState(() {
       // Jump to the root route when pressing the BottomNavBarItem that is currently selected
-      if (_selectedIndex == index) {
+      if (_selectedIndex == index && _selectedIndex == 0) {
         gymNavigatorKey.currentState?.popUntil((route) => route.isFirst);
       }
       if (index == 1) {

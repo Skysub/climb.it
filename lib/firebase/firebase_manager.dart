@@ -15,7 +15,7 @@ class FirebaseManager {
       if (calculateDistances) LocationManager.getUserPos()
     ]);
 
-    //Convincing the compiler that the objects have type
+    // Convincing the compiler that the objects have type
     DatabaseEvent data = futures[0] as DatabaseEvent;
     Position? pos = calculateDistances ? futures[1] as Position? : null;
 
@@ -49,11 +49,13 @@ class FirebaseManager {
   }
 
   static Future<List<ClimbingRoute>> loadRoutes(String gymKey) async {
+    // Retrieve routes from gym with gymKey
     var data = await FirebaseDatabase.instance
         .ref()
         .child('routes')
         .child(gymKey)
         .once();
+    // Map JSON to ClimbingRoute
     return data.snapshot.children
         .map((e) => ClimbingRoute.fromJSON(
             e.value as Map,

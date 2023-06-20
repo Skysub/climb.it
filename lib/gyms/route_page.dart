@@ -214,43 +214,48 @@ class _RoutePageState extends State<RoutePage> {
         hintVid.setLooping(false);
         hintVid.setVolume(1.0);
 
-        return Column(mainAxisSize: MainAxisSize.min, children: [
-          FutureBuilder(
-              future: initVideoPlayerFutures[hint.data],
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return Center(
-                      child: AspectRatio(
-                          aspectRatio: videoHintControllers[hint.data]!
-                              .value
-                              .aspectRatio,
-                          child:
-                              VideoPlayer(videoHintControllers[hint.data]!)));
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }),
-          Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: FloatingActionButton(
-                child: const Icon(
-                  Icons.play_arrow_sharp,
-                  color: Colors.white,
-                  size: 40,
-                ),
-                onPressed: () {
-                  setState(() {
-                    if (videoHintControllers[hint.data]!.value.isPlaying) {
-                      videoHintControllers[hint.data]!.pause();
-                    } else {
-                      videoHintControllers[hint.data]!.play();
-                    }
-                  });
-                },
-              ))
-        ]);
+        return StatefulBuilder(
+          builder: (context, setState) =>
+              Column(mainAxisSize: MainAxisSize.min, children: [
+            FutureBuilder(
+                future: initVideoPlayerFutures[hint.data],
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return Center(
+                        child: AspectRatio(
+                            aspectRatio: videoHintControllers[hint.data]!
+                                .value
+                                .aspectRatio,
+                            child:
+                                VideoPlayer(videoHintControllers[hint.data]!)));
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }),
+            Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: FloatingActionButton(
+                  backgroundColor: Colors.pink,
+                  child: Icon(
+                      videoHintControllers[hint.data]!.value.isPlaying
+                          ? Icons.play_arrow_sharp
+                          : Icons.pause,
+                      color: Colors.white,
+                      size: 40),
+                  onPressed: () {
+                    setState(() {
+                      if (videoHintControllers[hint.data]!.value.isPlaying) {
+                        videoHintControllers[hint.data]!.pause();
+                      } else {
+                        videoHintControllers[hint.data]!.play();
+                      }
+                    });
+                  },
+                ))
+          ]),
+        );
     }
   }
 }

@@ -59,6 +59,7 @@ class FirebaseManager {
     return data.snapshot.children
         .map((e) => ClimbingRoute.fromJSON(
             e.value as Map,
+            //Passes the hint substructure seperately
             e.child('hints').value == null
                 ? null
                 : e.child('hints').value as Map,

@@ -31,6 +31,7 @@ class ClimbingRoute {
             'https://firebasestorage.googleapis.com/v0/b/klatre-app1.appspot.com/o/example_images%2Fboulders_example.jpg?alt=media',
         tags: json['tags'] != null ? json['tags'].split(';') : [],
         color: getColor(json['color']),
+        //Creates the hints ascociated witht the route
         hints: hintsJSON != null
             ? List.generate(hintsJSON.length,
                 (index) => Hint.fromJSON(hintsJSON['hint${index + 1}']))

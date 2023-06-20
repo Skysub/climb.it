@@ -120,13 +120,16 @@ class _RoutePageState extends State<RoutePage> {
     );
   }
 
+  //Shows a dialog where you can choose a hint to see
   showHintSelector() {
+    //Autoselects the only hint, if there is only 1
     if (widget.route.hints.length == 1) {
       showDialog(
               traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
               context: context,
               builder: (BuildContext context) => AlertDialog(
                       title: Text(widget.route.hints[0].name),
+                      //Gets the hint widget
                       content: getHintContentWidget(widget.route.hints[0]),
                       actions: <Widget>[
                         TextButton(
@@ -134,6 +137,7 @@ class _RoutePageState extends State<RoutePage> {
                           child: const Text('OK'),
                         ),
                       ]))
+          //Stops all hint video currently playing, when the hint dialog is dismissed
           .whenComplete(() => videoHintControllers.forEach((key, value) {
                 if (value.value.isPlaying) {
                   value.pause();
@@ -156,6 +160,7 @@ class _RoutePageState extends State<RoutePage> {
                             child: Text(widget.route.hints[i].name),
                             onPressed: () {
                               Navigator.pop(context);
+                              //Shows the hint dialog
                               showDialog(
                                   traversalEdgeBehavior:
                                       TraversalEdgeBehavior.closedLoop,
@@ -164,6 +169,7 @@ class _RoutePageState extends State<RoutePage> {
                                       AlertDialog(
                                           title:
                                               Text(widget.route.hints[i].name),
+                                          //Gets the hint widget
                                           content: getHintContentWidget(
                                               widget.route.hints[i]),
                                           actions: <Widget>[
@@ -172,6 +178,7 @@ class _RoutePageState extends State<RoutePage> {
                                                   Navigator.pop(context, 'OK'),
                                               child: const Text('OK'),
                                             ),
+                                            //Stops alle currently playing hint videos when the dialog is dismissed
                                           ])).whenComplete(() =>
                                   videoHintControllers.forEach((key, value) {
                                     if (value.value.isPlaying) {
@@ -190,6 +197,7 @@ class _RoutePageState extends State<RoutePage> {
   }
 
   Widget getHintContentWidget(Hint hint) {
+    //Selects the correct type of widget to interpret the data field in the hint class
     switch (hint.type) {
       case HintType.text:
         return Text(hint.data);
@@ -201,9 +209,11 @@ class _RoutePageState extends State<RoutePage> {
                 const Center(child: CircularProgressIndicator()));
 
       case HintType.video:
+        //Insurance
         if (videoHintControllers[hint.data] == null) {
           return const Text("Video error");
         }
+        //Initializes the video and creates a future, for the future builder
         VideoPlayerController hintVid = videoHintControllers[hint.data]!;
         initVideoPlayerFutures.putIfAbsent(
             hint.data, () => hintVid.initialize());
@@ -216,6 +226,7 @@ class _RoutePageState extends State<RoutePage> {
             FutureBuilder(
                 future: initVideoPlayerFutures[hint.data],
                 builder: (context, snapshot) {
+                  //Only shows the videoplayer if the video has been initialized
                   if (snapshot.connectionState == ConnectionState.done) {
                     return Center(
                         child: AspectRatio(
@@ -223,6 +234,7 @@ class _RoutePageState extends State<RoutePage> {
                                 .value
                                 .aspectRatio,
                             child:
+                                //Shows the videoplayer
                                 VideoPlayer(videoHintControllers[hint.data]!)));
                   } else {
                     return const Center(
@@ -242,6 +254,7 @@ class _RoutePageState extends State<RoutePage> {
                       size: 40),
                   onPressed: () {
                     setState(() {
+                      //toggles playing the video
                       if (videoHintControllers[hint.data]!.value.isPlaying) {
                         videoHintControllers[hint.data]!.pause();
                       } else {

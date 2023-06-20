@@ -240,8 +240,8 @@ class _RoutePageState extends State<RoutePage> {
                   backgroundColor: Colors.pink,
                   child: Icon(
                       videoHintControllers[hint.data]!.value.isPlaying
-                          ? Icons.play_arrow_sharp
-                          : Icons.pause,
+                          ? Icons.pause
+                          : Icons.play_arrow_sharp,
                       color: Colors.white,
                       size: 40),
                   onPressed: () {

@@ -29,18 +29,14 @@ class _RoutePageState extends State<RoutePage> {
     //We start by preloading all the hint videos for this route if applicable
     var videoHints =
         widget.route.hints.where((e) => e.type == HintType.video).toList();
-    //Grimt udtryk nedenunder, kig væk!
+
+    //Controllers for the hints are created and put in this map
     videoHintControllers = Map<String, VideoPlayerController>.fromEntries(
         Iterable<MapEntry<String, VideoPlayerController>>.generate(
             videoHints.length,
+            //Genererer ud fra videohint arrayet
             (i) => MapEntry<String, VideoPlayerController>(videoHints[i].data,
                 VideoPlayerController.network(videoHints[i].data))));
-
-    videoHintControllers.forEach((key, value) {
-      initVideoPlayerFutures.putIfAbsent(key, () => value.initialize());
-      value.setLooping(false);
-      value.setVolume(1.0);
-    });
 
     super.initState();
   }
